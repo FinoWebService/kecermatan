@@ -8,7 +8,15 @@
 /* ===============================================
    BAGIAN 1 : DATA SOAL
    =============================================== */
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
 
+    let j = Math.floor(Math.random() * (i + 1));
+
+    // Tukar posisi
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 const questions = [
 
   {
@@ -102,6 +110,7 @@ function startTest() {
     return;
   }
 
+  shuffle(questions);
   // Tampilkan halaman ujian
   loginBox.classList.add("hidden");
   testBox.classList.remove("hidden");
@@ -154,6 +163,8 @@ function showQuestion() {
   }
 
   let q = questions[currentQuestion];
+
+  shuffle(q.options);
 
   // Tampilkan pola
   questionBox.innerText =
