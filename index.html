@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>CAT Kecermatan Akpol</title>
+
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Hubungkan ke CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ================= HALAMAN LOGIN ================= -->
+  <div id="login" class="login">
+
+    <h1>CAT Kecermatan Akpol</h1>
+
+    <p>Masukkan Nama Peserta</p>
+
+    <input 
+      type="text" 
+      id="nameInput" 
+      placeholder="Nama Lengkap"
+      autocomplete="off"
+    >
+
+    <br>
+
+    <button id="startBtn">
+      Mulai Ujian
+    </button>
+
+  </div>
+
+
+  <!-- ================= HALAMAN UJIAN ================= -->
+  <div id="test" class="hidden">
+
+    <!-- Nama Peserta -->
+    <h2 id="userName"></h2>
+
+    <!-- Timer -->
+    <div class="timer" id="timer">
+      Waktu: 10:00
+    </div>
+
+    <!-- Soal -->
+    <div class="question" id="question">
+      Soal akan muncul di sini
+    </div>
+
+    <!-- Pilihan -->
+    <div class="options" id="options">
+      <!-- Otomatis dari JS -->
+    </div>
+
+  </div>
+
+
+  <!-- ================= HALAMAN HASIL ================= -->
+  <div id="result" class="hidden result">
+
+    <h1>Hasil Ujian</h1>
+
+    <p id="finalName"></p>
+
+    <h2 id="finalScore"></h2>
+
+    <button onclick="location.reload()">
+      Ulangi Ujian
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- Hubungkan ke JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
