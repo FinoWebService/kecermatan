@@ -1,0 +1,2 @@
+# kecermatan
+tugas tik
