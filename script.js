@@ -1,13 +1,6 @@
-/*************************************************
- * CAT KECERMATAN AKPOL
- * File : script.js
- * Fungsi : Mengatur logika ujian
- *************************************************/
-
-
-/* ===============================================
-   BAGIAN 1 : DATA SOAL
-   =============================================== */
+/* =============================
+   FUNGSI ACAK (SHUFFLE)
+============================= */
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
 
@@ -17,6 +10,11 @@ function shuffle(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
+
+/* =============================
+   BANK SOAL
+============================= */
 const questions = [
 
   {
@@ -28,104 +26,96 @@ const questions = [
   {
     pattern: ["▲","●","▲","●","▲","?"],
     answer: "●",
-    options: ["●","▲","★","■","◆","☆"]
+    options: ["●","▲","■","◆","★","☆"]
   },
 
   {
-    pattern: ["■","■","◆","■","■","?"],
-    answer: "◆",
-    options: ["■","◆","▲","●","☆","★"]
-  },
-
-  {
-    pattern: ["○","●","○","●","○","?"],
-    answer: "●",
-    options: ["○","●","■","▲","★","◆"]
-  },
-
-  {
-    pattern: ["◆","▲","■","◆","▲","?"],
+    pattern: ["■","■","◆","■","?","◆"],
     answer: "■",
-    options: ["■","◆","▲","●","☆","★"]
+    options: ["■","◆","★","●","▲","☆"]
   },
 
   {
-    pattern: ["◆","▲","■","◆","▲","?"],
-    answer: "■",
-    options: ["■","◆","▲","●","☆","★"]
+    pattern: ["☆","★","☆","★","☆","?"],
+    answer: "★",
+    options: ["★","☆","▲","■","◆","●"]
+  },
+
+  {
+    pattern: ["●","▲","●","▲","●","?"],
+    answer: "▲",
+    options: ["▲","●","■","◆","★","☆"]
   }
 
 ];
 
 
-/* ===============================================
-   BAGIAN 2 : VARIABEL GLOBAL
-   =============================================== */
+/* =============================
+   VARIABEL
+============================= */
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 600;
+let timer;
+let userName = "";
 
-let currentQuestion = 0;   // Nomor soal
-let score = 0;             // Skor
-let timeLeft = 600;        // Waktu (detik)
-let timer;                 // Timer
-let userName = "";         // Nama peserta
 
+/* =============================
+   AMBIL ELEMEN HTML
+============================= */
+const startBtn = document.getElementById("startBtn");
 
-/* ===============================================
-   BAGIAN 3 : AMBIL ELEMEN HTML
-   =============================================== */
+const nameInput = document.getElementById("nameInput");
 
-const startBtn   = document.getElementById("startBtn");
-const loginBox   = document.getElementById("login");
-const testBox    = document.getElementById("test");
-const resultBox  = document.getElementById("result");
+const loginBox = document.getElementById("login");
+const testBox = document.getElementById("test");
+const resultBox = document.getElementById("result");
 
-const nameInput  = document.getElementById("nameInput");
-const userLabel  = document.getElementById("userName");
-
-const timerLabel = document.getElementById("timer");
-const questionBox= document.getElementById("question");
+const questionBox = document.getElementById("question");
 const optionsBox = document.getElementById("options");
 
-const finalName  = document.getElementById("finalName");
+const timerLabel = document.getElementById("timer");
+
+const userNameLabel = document.getElementById("userName");
+
+const finalName = document.getElementById("finalName");
 const finalScore = document.getElementById("finalScore");
 
 
-/* ===============================================
-   BAGIAN 4 : EVENT BUTTON
-   =============================================== */
-
+/* =============================
+   EVENT BUTTON
+============================= */
 startBtn.addEventListener("click", startTest);
 
 
-/* ===============================================
-   BAGIAN 5 : MULAI UJIAN
-   =============================================== */
-
+/* =============================
+   MULAI UJIAN
+============================= */
 function startTest() {
 
   userName = nameInput.value;
 
-  // Validasi nama
   if (userName === "") {
-    alert("Nama wajib diisi!");
+    alert("Masukkan nama terlebih dahulu!");
     return;
   }
 
+  // ACAK SOAL
   shuffle(questions);
-  // Tampilkan halaman ujian
+
   loginBox.classList.add("hidden");
   testBox.classList.remove("hidden");
 
-  userLabel.innerText = "Peserta: " + userName;
+  userNameLabel.innerText = "Peserta: " + userName;
 
   startTimer();
   showQuestion();
 }
 
 
-/* ===============================================
-   BAGIAN 6 : TIMER
-   =============================================== */
-
+/* =============================
+   TIMER
+============================= */
 function startTimer() {
 
   timer = setInterval(function() {
@@ -139,24 +129,22 @@ function startTimer() {
       detik = "0" + detik;
     }
 
-    timerLabel.innerText =
-      "Waktu: " + menit + ":" + detik;
+    timerLabel.innerText = "Waktu: " + menit + ":" + detik;
 
     if (timeLeft <= 0) {
       finishTest();
     }
 
   }, 1000);
+
 }
 
 
-/* ===============================================
-   BAGIAN 7 : TAMPILKAN SOAL
-   =============================================== */
-
+/* =============================
+   TAMPILKAN SOAL
+============================= */
 function showQuestion() {
 
-  // Jika soal habis
   if (currentQuestion >= questions.length) {
     finishTest();
     return;
@@ -164,56 +152,51 @@ function showQuestion() {
 
   let q = questions[currentQuestion];
 
+  // ACAK PILIHAN JAWABAN
   shuffle(q.options);
 
-  // Tampilkan pola
-  questionBox.innerText =
-    q.pattern.join("   ");
+  questionBox.innerText = q.pattern.join(" ");
 
-  // Bersihkan pilihan lama
   optionsBox.innerHTML = "";
 
-  // Buat pilihan baru
-  q.options.forEach(function(pilihan) {
+  q.options.forEach(function(opt) {
 
-    let btn = document.createElement("div");
+    let btn = document.createElement("button");
 
-    btn.className = "option";
-    btn.innerText = pilihan;
+    btn.innerText = opt;
 
     btn.onclick = function() {
-      checkAnswer(pilihan);
+      checkAnswer(opt);
     };
 
     optionsBox.appendChild(btn);
 
   });
+
 }
 
 
-/* ===============================================
-   BAGIAN 8 : CEK JAWABAN
-   =============================================== */
+/* =============================
+   CEK JAWABAN
+============================= */
+function checkAnswer(answer) {
 
-function checkAnswer(jawabanUser) {
+  let correct = questions[currentQuestion].answer;
 
-  let jawabanBenar =
-    questions[currentQuestion].answer;
-
-  if (jawabanUser === jawabanBenar) {
+  if (answer === correct) {
     score++;
   }
 
   currentQuestion++;
 
   showQuestion();
+
 }
 
 
-/* ===============================================
-   BAGIAN 9 : SELESAI UJIAN
-   =============================================== */
-
+/* =============================
+   SELESAI
+============================= */
 function finishTest() {
 
   clearInterval(timer);
@@ -221,14 +204,14 @@ function finishTest() {
   testBox.classList.add("hidden");
   resultBox.classList.remove("hidden");
 
-  finalName.innerText =
-    "Nama: " + userName;
+  let total = questions.length;
 
-  let nilai =
-    Math.round((score / questions.length) * 100);
+  let nilai = Math.round((score / total) * 100);
+
+  finalName.innerText = "Nama: " + userName;
 
   finalScore.innerText =
-    "Skor: " + score +
-    " / " + questions.length +
-    " (" + nilai + ")";
+    "Skor: " + score + "/" + total +
+    " | Nilai: " + nilai;
+
 }
