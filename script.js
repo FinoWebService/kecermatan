@@ -153,7 +153,7 @@ function showQuestion() {
   let q = questions[currentQuestion];
 
   // ACAK PILIHAN JAWABAN
-  shuffle(q.options);
+  
 
   questionBox.innerText = q.pattern.join(" ");
 
