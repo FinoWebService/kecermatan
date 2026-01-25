@@ -55,7 +55,7 @@ const questions = [
 ============================= */
 let currentQuestion = 0;
 let score = 0;
-let timeLeft = 600;
+let timeLeft = 1200;
 let timer;
 let userName = "";
 
