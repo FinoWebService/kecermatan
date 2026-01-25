@@ -1,82 +1,70 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>CAT Kecermatan Kedinasan</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>CAT Kecermatan</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container">
+<!-- LOGIN -->
+<div class="login" id="login">
 
-  <!-- ================= HALAMAN LOGIN ================= -->
-  <div id="login" class="login">
+    <h2>CAT Kecermatan Kedinasan</h2>
 
-    <h1>CAT Kecermatan Kedinasan</h1>
+    <p>Masukkan Nama</p>
 
-    <p>Masukkan Nama Peserta</p>
-
-    <input 
-      type="text" 
-      id="nameInput" 
-      placeholder="Nama Lengkap"
-      autocomplete="off"
-    >
+    <input type="text" id="nameInput" placeholder="Nama Lengkap">
 
     <br>
 
-    <button id="startBtn">
-      Mulai Ujian
-    </button>
-
-  </div>
-
-
-  <!-- ================= HALAMAN UJIAN ================= -->
-  <div id="test" class="hidden">
-
-    <!-- Nama Peserta -->
-    <h2 id="userName"></h2>
-
-    <!-- Timer -->
-    <div class="timer" id="timer">
-      Waktu: 10:00
-    </div>
-
-    <!-- Soal -->
-    <div class="question" id="question">
-      Soal akan muncul di sini
-    </div>
-
-    <!-- Pilihan -->
-    <div class="options" id="options">
-      <!-- Otomatis dari JS -->
-    </div>
-
-  </div>
-
-
-  <!-- ================= HALAMAN HASIL ================= -->
-  <div id="result" class="hidden result">
-
-    <h1>Hasil Ujian</h1>
-
-    <p id="finalName"></p>
-
-    <h2 id="finalScore"></h2>
-
-    <button onclick="location.reload()">
-      Ulangi Ujian
-    </button>
-
-  </div>
+    <button onclick="startExam()">Mulai Ujian</button>
 
 </div>
 
 
-<!-- Hubungkan ke JavaScript -->
-<script src="script.js"></script>
+<!-- UJIAN -->
+<div class="wrapper" id="exam">
 
+<div id="userName"></div>
+
+<div class="header">
+
+    <div class="title-box">
+        Tahap Ujian :
+        <b>KECERMATAN</b>
+    </div>
+
+    <div class="timer-box">
+        <span>Sisa Waktu</span>
+        <div id="timer">01:00</div>
+    </div>
+
+</div>
+
+<div class="main">
+
+    <div id="stageInfo"></div>
+
+    <div class="mapping" id="mapping"></div>
+
+    <div class="question-box" id="question"></div>
+
+    <div class="answer-box" id="buttons"></div>
+
+    <div class="info">
+        Soal: <span id="count">0</span>/50
+    </div>
+
+    <div id="result"></div>
+
+</div>
+
+</div>
+
+
+<script src="script.js"></script>
 </body>
 </html>

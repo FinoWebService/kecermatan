@@ -1,222 +1,268 @@
-/* =============================
-   FUNGSI ACAK (SHUFFLE)
-============================= */
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
 
-    let j = Math.floor(Math.random() * (i + 1));
+/* LOGIN */
+function startExam(){
 
-    // Tukar posisi
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
+    let name = document.getElementById("nameInput").value;
 
-
-/* =============================
-   BANK SOAL
-============================= */
-const questions = [
-
-  {
-    pattern: ["★","★","☆","★","?","☆"],
-    answer: "★",
-    options: ["★","☆","▲","●","■","◆"]
-  },
-
-  {
-    pattern: ["▲","●","▲","●","▲","?"],
-    answer: "●",
-    options: ["●","▲","■","◆","★","☆"]
-  },
-
-  {
-    pattern: ["■","■","◆","■","?","◆"],
-    answer: "■",
-    options: ["■","◆","★","●","▲","☆"]
-  },
-
-  {
-    pattern: ["☆","★","☆","★","☆","?"],
-    answer: "★",
-    options: ["★","☆","▲","■","◆","●"]
-  },
-
-  {
-    pattern: ["●","▲","●","▲","●","?"],
-    answer: "▲",
-    options: ["▲","●","■","◆","★","☆"]
-  },
-
-  {
-    pattern: ["●","▲","●","▲","●","?"],
-    answer: "▲",
-    options: ["▲","●","■","◆","★","☆"]
-  }
-];
-
-
-/* =============================
-   VARIABEL
-============================= */
-let currentQuestion = 0;
-let score = 0;
-let timeLeft = 600;
-let timer;
-let userName = "";
-
-
-/* =============================
-   AMBIL ELEMEN HTML
-============================= */
-const startBtn = document.getElementById("startBtn");
-
-const nameInput = document.getElementById("nameInput");
-
-const loginBox = document.getElementById("login");
-const testBox = document.getElementById("test");
-const resultBox = document.getElementById("result");
-
-const questionBox = document.getElementById("question");
-const optionsBox = document.getElementById("options");
-
-const timerLabel = document.getElementById("timer");
-
-const userNameLabel = document.getElementById("userName");
-
-const finalName = document.getElementById("finalName");
-const finalScore = document.getElementById("finalScore");
-
-
-/* =============================
-   EVENT BUTTON
-============================= */
-startBtn.addEventListener("click", startTest);
-
-
-/* =============================
-   MULAI UJIAN
-============================= */
-function startTest() {
-
-  userName = nameInput.value;
-
-  if (userName === "") {
-    alert("Masukkan nama terlebih dahulu!");
-    return;
-  }
-
-  // ACAK SOAL
-  shuffle(questions);
-
-  loginBox.classList.add("hidden");
-  testBox.classList.remove("hidden");
-
-  userNameLabel.innerText = "Peserta: " + userName;
-
-  startTimer();
-  showQuestion();
-}
-
-
-/* =============================
-   TIMER
-============================= */
-function startTimer() {
-
-  timer = setInterval(function() {
-
-    timeLeft--;
-
-    let menit = Math.floor(timeLeft / 60);
-    let detik = timeLeft % 60;
-
-    if (detik < 10) {
-      detik = "0" + detik;
+    if(name===""){
+        alert("Masukkan nama dulu!");
+        return;
     }
 
-    timerLabel.innerText = "Waktu: " + menit + ":" + detik;
+    document.getElementById("login").style.display="none";
+    document.getElementById("exam").style.display="block";
 
-    if (timeLeft <= 0) {
-      finishTest();
+    document.getElementById("userName").innerText =
+    "Peserta: " + name;
+
+    startBreak();
+}
+
+
+/* KONFIG */
+const TOTAL_STAGE = 10;
+const MAX_QUESTION = 50;
+const STAGE_TIME = 60;
+
+const PREP_FIRST = 10;
+const PREP_NEXT = 5;
+
+const symbols = ['×','=','-','Γ','/','+','<','>','%','#'];
+const letters = ['A','B','C','D','E'];
+
+let stage = 1;
+let timeLeft = STAGE_TIME;
+let timer = null;
+let breakTimer = null;
+
+let mapping = {};
+let correct = '';
+
+let count = 0;
+let correctCount = 0;
+
+let scores = [];
+
+
+/* ELEMENT */
+const mappingDiv = document.getElementById('mapping');
+const questionDiv = document.getElementById('question');
+const buttonsDiv = document.getElementById('buttons');
+const countSpan = document.getElementById('count');
+const timerDiv = document.getElementById('timer');
+const stageInfo = document.getElementById('stageInfo');
+const resultDiv = document.getElementById('result');
+
+
+/* UTIL */
+function shuffle(arr){
+    return arr.sort(()=>Math.random()-0.5);
+}
+
+
+/* MAPPING */
+function createMapping(){
+
+    let pool = shuffle([...symbols]).slice(0,5);
+
+    mapping = {};
+
+    letters.forEach((l,i)=>{
+        mapping[l]=pool[i];
+    });
+
+    renderMapping();
+}
+
+function renderMapping(){
+
+    mappingDiv.innerHTML='';
+
+    letters.forEach(l=>{
+
+        const div = document.createElement('div');
+        div.className='map-item';
+
+        div.innerHTML=`
+            <div class="map-symbol">${mapping[l]}</div>
+            <div class="map-letter">${l}</div>
+        `;
+
+        mappingDiv.appendChild(div);
+    });
+}
+
+
+/* QUESTION */
+function createQuestion(){
+
+    let used = Object.values(mapping);
+    let temp = shuffle([...used]);
+
+    let missing = temp.pop();
+
+    correct = Object.keys(mapping)
+        .find(k=>mapping[k]===missing);
+
+    questionDiv.innerHTML='';
+
+    temp.forEach(s=>{
+
+        const div = document.createElement('div');
+        div.className='q-item';
+        div.innerText=s;
+
+        questionDiv.appendChild(div);
+    });
+}
+
+
+/* BUTTON */
+function createButtons(){
+
+    buttonsDiv.innerHTML='';
+
+    letters.forEach(l=>{
+
+        const btn = document.createElement('button');
+        btn.innerText=l;
+        btn.onclick=()=>answer(l);
+
+        buttonsDiv.appendChild(btn);
+    });
+}
+
+
+/* ANSWER */
+function answer(a){
+
+    if(count>=MAX_QUESTION) return;
+
+    count++;
+
+    if(a===correct){
+        correctCount++;
     }
 
-  }, 1000);
+    countSpan.innerText=count;
 
+    if(count>=MAX_QUESTION){
+        endStage();
+        return;
+    }
+
+    createQuestion();
 }
 
 
-/* =============================
-   TAMPILKAN SOAL
-============================= */
-function showQuestion() {
+/* TIMER */
+function startTimer(){
 
-  if (currentQuestion >= questions.length) {
-    finishTest();
-    return;
-  }
+    clearInterval(timer);
 
-  let q = questions[currentQuestion];
+    timer=setInterval(()=>{
 
-  // ACAK PILIHAN JAWABAN
-  shuffle(q.options)
+        timeLeft--;
 
-  questionBox.innerText = q.pattern.join(" ");
+        let m = Math.floor(timeLeft/60);
+        let s = timeLeft%60;
 
-  optionsBox.innerHTML = "";
+        timerDiv.innerText=
+        `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 
-  q.options.forEach(function(opt) {
+        if(timeLeft<=0){
+            clearInterval(timer);
+            endStage();
+        }
 
-    let btn = document.createElement("button");
-
-    btn.innerText = opt;
-
-    btn.onclick = function() {
-      checkAnswer(opt);
-    };
-
-    optionsBox.appendChild(btn);
-
-  });
-
+    },1000);
 }
 
 
-/* =============================
-   CEK JAWABAN
-============================= */
-function checkAnswer(answer) {
+/* STAGE */
+function startStage(){
 
-  let correct = questions[currentQuestion].answer;
+    clearInterval(breakTimer);
 
-  if (answer === correct) {
-    score++;
-  }
+    stageInfo.innerText=`Kolom ${stage}`;
 
-  currentQuestion++;
+    timeLeft=STAGE_TIME;
+    count=0;
+    correctCount=0;
 
-  showQuestion();
+    countSpan.innerText=0;
 
+    createMapping();
+    createQuestion();
+    createButtons();
+    startTimer();
 }
 
 
-/* =============================
-   SELESAI
-============================= */
-function finishTest() {
+/* BREAK */
+function startBreak(){
 
-  clearInterval(timer);
+    let sec = (stage === 1) ? PREP_FIRST : PREP_NEXT;
 
-  testBox.classList.add("hidden");
-  resultBox.classList.remove("hidden");
+    stageInfo.innerText =
+    `Kolom ${stage} mulai dalam ${sec} detik`;
 
-  let total = questions.length;
+    questionDiv.innerHTML='';
+    mappingDiv.innerHTML='';
+    buttonsDiv.innerHTML='';
 
-  let nilai = Math.round((score / total) * 100);
+    breakTimer = setInterval(()=>{
 
-  finalName.innerText = "Nama: " + userName;
+        sec--;
 
-  finalScore.innerText =
-    "Skor: " + score + "/" + total +
-    " | Nilai: " + nilai;
+        stageInfo.innerText =
+        `Kolom ${stage} mulai dalam ${sec} detik`;
 
+        if(sec<=0){
+
+            clearInterval(breakTimer);
+            startStage();
+        }
+
+    },1000);
+}
+
+
+/* END */
+function endStage(){
+
+    clearInterval(timer);
+
+    let score=Math.round((correctCount/MAX_QUESTION)*100);
+    scores.push(score);
+
+    if(stage<TOTAL_STAGE){
+
+        stage++;
+        startBreak();
+
+    }else{
+        showResult();
+    }
+}
+
+
+/* RESULT */
+function showResult(){
+
+    let total=0;
+
+    let html="<h3>Hasil Akhir</h3>";
+
+    scores.forEach((s,i)=>{
+        html+=`Kolom ${i+1}: ${s}<br>`;
+        total+=s;
+    });
+
+    let avg=Math.round(total/TOTAL_STAGE);
+
+    html+=`<br><b>Nilai Akhir: ${avg}</b>`;
+
+    resultDiv.style.display="block";
+    resultDiv.innerHTML=html;
 }

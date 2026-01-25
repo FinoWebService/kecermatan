@@ -1,185 +1,169 @@
-/*************************************************
-  CAT KECERMATAN AKPOL
-  File : style.css
-  Fungsi : Mengatur tampilan aplikasi
-*************************************************/
-
-
-/* ===============================================
-   BAGIAN 1 : RESET DASAR
-   =============================================== */
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:#f3f4f6;
 }
 
-
-/* ===============================================
-   BAGIAN 2 : BODY & BACKGROUND
-   =============================================== */
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #eef2f7;
-  color: #333;
+/* LOGIN */
+.login{
+    max-width:400px;
+    margin:150px auto;
+    background:white;
+    padding:30px;
+    text-align:center;
+    border-radius:8px;
 }
 
-
-/* ===============================================
-   BAGIAN 3 : CONTAINER UTAMA
-   =============================================== */
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  min-height: 100vh;
-  padding: 25px;
+.login input{
+    width:80%;
+    padding:10px;
+    margin:15px 0;
+    font-size:16px;
 }
 
-
-/* ===============================================
-   BAGIAN 4 : JUDUL
-   =============================================== */
-
-h1, h2 {
-  text-align: center;
-  margin-bottom: 15px;
+.login button{
+    padding:10px 25px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
 }
 
-h1 {
-  color: #0d47a1;
+/* WRAPPER */
+.wrapper{
+    max-width:1200px;
+    margin:20px auto;
+    background:white;
+    padding:25px 30px;
+    border-radius:8px;
+    display:none;
 }
 
-
-/* ===============================================
-   BAGIAN 5 : HALAMAN LOGIN
-   =============================================== */
-
-.login {
-  text-align: center;
-  margin-top: 120px;
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
 }
 
-.login p {
-  margin-bottom: 10px;
+.title-box{
+    font-size:16px;
+    color:#888;
 }
 
-
-/* Input Nama */
-input {
-  width: 260px;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 15px;
+.title-box b{
+    color:#2563eb;
+    border:1px solid #2563eb;
+    padding:5px 12px;
+    border-radius:4px;
 }
 
-input:focus {
-  outline: none;
-  border-color: #1976d2;
+.timer-box{
+    background:#f5f5f5;
+    padding:12px 30px;
+    border-radius:6px;
+    text-align:center;
 }
 
-
-/* Tombol */
-button {
-  padding: 10px 25px;
-  background: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 15px;
-  transition: 0.2s;
+.timer-box span{
+    display:block;
+    font-size:13px;
+    color:#777;
 }
 
-button:hover {
-  background: #0d47a1;
+#timer{
+    font-size:28px;
+    color:#2563eb;
+    font-weight:bold;
 }
 
-
-/* ===============================================
-   BAGIAN 6 : VISIBILITY
-   =============================================== */
-
-.hidden {
-  display: none;
+/* MAIN */
+.main{
+    text-align:center;
 }
 
-
-/* ===============================================
-   BAGIAN 7 : TIMER
-   =============================================== */
-
-.timer {
-  text-align: right;
-  font-size: 18px;
-  font-weight: bold;
-  color: #d32f2f;
-  margin-bottom: 15px;
+#stageInfo{
+    font-size:18px;
+    color:#777;
+    margin-bottom:15px;
 }
 
-
-/* ===============================================
-   BAGIAN 8 : SOAL
-   =============================================== */
-
-.question {
-  margin: 30px 0;
-  font-size: 26px;
-  text-align: center;
-  letter-spacing: 6px;
-  font-weight: bold;
+/* USER */
+#userName{
+    text-align:center;
+    margin-bottom:10px;
+    font-weight:bold;
 }
 
-
-/* ===============================================
-   BAGIAN 9 : PILIHAN JAWABAN
-   =============================================== */
-
-.options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+/* MAPPING */
+.mapping{
+    display:flex;
+    justify-content:center;
+    gap:45px;
+    margin:25px 0;
 }
 
-
-/* Tombol pilihan */
-.option {
-  border: 1px solid #ccc;
-  background: #fafafa;
-  padding: 15px;
-  text-align: center;
-  font-size: 20px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: 0.2s;
+.map-item{
+    text-align:center;
 }
 
-.option:hover {
-  background: #e3f2fd;
-  border-color: #1976d2;
+.map-symbol{
+    font-size:42px;
+    color:#9ca3af;
 }
 
-
-/* ===============================================
-   BAGIAN 10 : HASIL
-   =============================================== */
-
-.result {
-  text-align: center;
-  margin-top: 90px;
+.map-letter{
+    margin-top:6px;
+    color:#888;
 }
 
-.result h1 {
-  color: #2e7d32;
+/* QUESTION */
+.question-box{
+    display:flex;
+    justify-content:center;
+    gap:15px;
 }
 
-#finalScore {
-  margin: 20px 0;
-  font-size: 22px;
-  color: #1565c0;
+.q-item{
+    width:65px;
+    height:65px;
+    border:2px solid #000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+}
+
+/* ANSWER */
+.answer-box{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:25px;
+}
+
+.answer-box button{
+    width:140px;
+    height:45px;
+    border:2px solid #2563eb;
+    background:#ecfeff;
+    color:#2563eb;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.answer-box button:hover{
+    background:#bae6fd;
+}
+
+/* RESULT */
+#result{
+    margin-top:25px;
+    padding:15px;
+    background:#f1f5f9;
+    border-radius:6px;
+    display:none;
 }
