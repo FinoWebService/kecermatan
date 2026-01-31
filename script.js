@@ -1,25 +1,44 @@
+// ===============================
+// IMPORT FIREBASE
+// ===============================
+import { simpanNilai } from "./firebase.js";
 
-/* LOGIN */
+
+// ===============================
+// GLOBAL USER
+// ===============================
+let userNameGlobal = "";
+
+
+// ===============================
+// LOGIN
+// ===============================
 function startExam(){
 
     let name = document.getElementById("nameInput").value;
 
-    if(name===""){
+    if(name === ""){
         alert("Masukkan nama dulu!");
         return;
     }
 
-    document.getElementById("login").style.display="none";
-    document.getElementById("exam").style.display="block";
+    userNameGlobal = name;
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("exam").style.display = "block";
 
     document.getElementById("userName").innerText =
-    "Peserta: " + name;
+        "Peserta: " + name;
 
     startBreak();
 }
 
+window.startExam = startExam; // supaya bisa dipanggil dari HTML
 
-/* KONFIG */
+
+// ===============================
+// KONFIG
+// ===============================
 const TOTAL_STAGE = 10;
 const MAX_QUESTION = 50;
 const STAGE_TIME = 60;
@@ -44,7 +63,9 @@ let correctCount = 0;
 let scores = [];
 
 
-/* ELEMENT */
+// ===============================
+// ELEMENT
+// ===============================
 const mappingDiv = document.getElementById('mapping');
 const questionDiv = document.getElementById('question');
 const buttonsDiv = document.getElementById('buttons');
@@ -54,13 +75,17 @@ const stageInfo = document.getElementById('stageInfo');
 const resultDiv = document.getElementById('result');
 
 
-/* UTIL */
+// ===============================
+// UTIL
+// ===============================
 function shuffle(arr){
     return arr.sort(()=>Math.random()-0.5);
 }
 
 
-/* MAPPING */
+// ===============================
+// MAPPING
+// ===============================
 function createMapping(){
 
     let pool = shuffle([...symbols]).slice(0,5);
@@ -68,7 +93,7 @@ function createMapping(){
     mapping = {};
 
     letters.forEach((l,i)=>{
-        mapping[l]=pool[i];
+        mapping[l] = pool[i];
     });
 
     renderMapping();
@@ -76,14 +101,14 @@ function createMapping(){
 
 function renderMapping(){
 
-    mappingDiv.innerHTML='';
+    mappingDiv.innerHTML = '';
 
     letters.forEach(l=>{
 
         const div = document.createElement('div');
-        div.className='map-item';
+        div.className = 'map-item';
 
-        div.innerHTML=`
+        div.innerHTML = `
             <div class="map-symbol">${mapping[l]}</div>
             <div class="map-letter">${l}</div>
         `;
@@ -93,7 +118,9 @@ function renderMapping(){
 }
 
 
-/* QUESTION */
+// ===============================
+// QUESTION
+// ===============================
 function createQuestion(){
 
     let used = Object.values(mapping);
@@ -102,51 +129,55 @@ function createQuestion(){
     let missing = temp.pop();
 
     correct = Object.keys(mapping)
-        .find(k=>mapping[k]===missing);
+        .find(k => mapping[k] === missing);
 
-    questionDiv.innerHTML='';
+    questionDiv.innerHTML = '';
 
     temp.forEach(s=>{
 
         const div = document.createElement('div');
-        div.className='q-item';
-        div.innerText=s;
+        div.className = 'q-item';
+        div.innerText = s;
 
         questionDiv.appendChild(div);
     });
 }
 
 
-/* BUTTON */
+// ===============================
+// BUTTON
+// ===============================
 function createButtons(){
 
-    buttonsDiv.innerHTML='';
+    buttonsDiv.innerHTML = '';
 
     letters.forEach(l=>{
 
         const btn = document.createElement('button');
-        btn.innerText=l;
-        btn.onclick=()=>answer(l);
+        btn.innerText = l;
+        btn.onclick = ()=>answer(l);
 
         buttonsDiv.appendChild(btn);
     });
 }
 
 
-/* ANSWER */
+// ===============================
+// ANSWER
+// ===============================
 function answer(a){
 
-    if(count>=MAX_QUESTION) return;
+    if(count >= MAX_QUESTION) return;
 
     count++;
 
-    if(a===correct){
+    if(a === correct){
         correctCount++;
     }
 
-    countSpan.innerText=count;
+    countSpan.innerText = count;
 
-    if(count>=MAX_QUESTION){
+    if(count >= MAX_QUESTION){
         endStage();
         return;
     }
@@ -155,22 +186,24 @@ function answer(a){
 }
 
 
-/* TIMER */
+// ===============================
+// TIMER
+// ===============================
 function startTimer(){
 
     clearInterval(timer);
 
-    timer=setInterval(()=>{
+    timer = setInterval(()=>{
 
         timeLeft--;
 
-        let m = Math.floor(timeLeft/60);
-        let s = timeLeft%60;
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
 
-        timerDiv.innerText=
-        `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        timerDiv.innerText =
+            `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 
-        if(timeLeft<=0){
+        if(timeLeft <= 0){
             clearInterval(timer);
             endStage();
         }
@@ -179,18 +212,20 @@ function startTimer(){
 }
 
 
-/* STAGE */
+// ===============================
+// STAGE
+// ===============================
 function startStage(){
 
     clearInterval(breakTimer);
 
-    stageInfo.innerText=`Kolom ${stage}`;
+    stageInfo.innerText = `Kolom ${stage}`;
 
-    timeLeft=STAGE_TIME;
-    count=0;
-    correctCount=0;
+    timeLeft = STAGE_TIME;
+    count = 0;
+    correctCount = 0;
 
-    countSpan.innerText=0;
+    countSpan.innerText = 0;
 
     createMapping();
     createQuestion();
@@ -199,26 +234,28 @@ function startStage(){
 }
 
 
-/* BREAK */
+// ===============================
+// BREAK
+// ===============================
 function startBreak(){
 
     let sec = (stage === 1) ? PREP_FIRST : PREP_NEXT;
 
     stageInfo.innerText =
-    `Kolom ${stage} mulai dalam ${sec} detik`;
+        `Kolom ${stage} mulai dalam ${sec} detik`;
 
-    questionDiv.innerHTML='';
-    mappingDiv.innerHTML='';
-    buttonsDiv.innerHTML='';
+    questionDiv.innerHTML = '';
+    mappingDiv.innerHTML = '';
+    buttonsDiv.innerHTML = '';
 
     breakTimer = setInterval(()=>{
 
         sec--;
 
         stageInfo.innerText =
-        `Kolom ${stage} mulai dalam ${sec} detik`;
+            `Kolom ${stage} mulai dalam ${sec} detik`;
 
-        if(sec<=0){
+        if(sec <= 0){
 
             clearInterval(breakTimer);
             startStage();
@@ -228,15 +265,17 @@ function startBreak(){
 }
 
 
-/* END */
+// ===============================
+// END STAGE
+// ===============================
 function endStage(){
 
     clearInterval(timer);
 
-    let score=Math.round((correctCount/MAX_QUESTION)*100);
+    let score = Math.round((correctCount / MAX_QUESTION) * 100);
     scores.push(score);
 
-    if(stage<TOTAL_STAGE){
+    if(stage < TOTAL_STAGE){
 
         stage++;
         startBreak();
@@ -247,22 +286,39 @@ function endStage(){
 }
 
 
-/* RESULT */
-function showResult(){
+// ===============================
+// RESULT + FIREBASE
+// ===============================
+async function showResult(){
 
-    let total=0;
+    let total = 0;
 
-    let html="<h3>Hasil Akhir</h3>";
+    let html = "<h3>Hasil Akhir</h3>";
 
     scores.forEach((s,i)=>{
-        html+=`Kolom ${i+1}: ${s}<br>`;
-        total+=s;
+        html += `Kolom ${i+1}: ${s}<br>`;
+        total += s;
     });
 
-    let avg=Math.round(total/TOTAL_STAGE);
+    let avg = Math.round(total / TOTAL_STAGE);
 
-    html+=`<br><b>Nilai Akhir: ${avg}</b>`;
+    html += `<br><b>Nilai Akhir: ${avg}</b>`;
 
-    resultDiv.style.display="block";
-    resultDiv.innerHTML=html;
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = html;
+
+    // ===============================
+    // SIMPAN KE FIREBASE
+    // ===============================
+    try {
+
+        await simpanNilai(userNameGlobal, avg);
+
+        console.log("Nilai berhasil disimpan!");
+
+    } catch (e){
+
+        console.error("Gagal simpan:", e);
+
+    }
 }
