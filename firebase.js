@@ -13,31 +13,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Export function supaya bisa dipakai di file lain
 export async function simpanNilai(nama, nilai){
 
-  if(!nama || nilai === undefined){
-    throw new Error("Data tidak lengkap");
-  }
-
-  try {
-
-    const docRef = await addDoc(collection(db, "hasilTes"), {
-      nama,
-      nilai,
-      waktu: new Date(),
-      device: navigator.userAgent
-    });
-
-    console.log("BERHASIL SIMPAN ID:", docRef.id);
-
-    return docRef.id;
-
-  } catch (e) {
-
-    console.error("GAGAL SIMPAN:", e);
-    throw e;
-
-  }
+  await addDoc(collection(db, "hasilTes"), {
+    nama,
+    nilai,
+    waktu: new Date()
+  });
 
 }

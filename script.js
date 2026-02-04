@@ -292,7 +292,6 @@ function endStage(){
 async function showResult(){
 
     let total = 0;
-
     let html = "<h3>Hasil Akhir</h3>";
 
     scores.forEach((s,i)=>{
@@ -307,18 +306,20 @@ async function showResult(){
     resultDiv.style.display = "block";
     resultDiv.innerHTML = html;
 
-    // ===============================
-    // SIMPAN KE FIREBASE
-    // ===============================
     try {
-  console.log("Mencoba simpan ke Firebase:", userNameGlobal, avg);
 
-  await simpanNilai(userNameGlobal, avg);
+        console.log("Kirim data:", userNameGlobal, avg);
 
-  alert("Nilai berhasil disimpan!");
-} catch (e) {
-  console.error("Error simpan nilai:", e);
-  alert("Gagal simpan nilai: " + e.message);
+        await simpanNilai(userNameGlobal, avg);
+
+        alert("Nilai berhasil disimpan!");
+
+    } catch (e){
+
+        console.error("Firebase error:", e);
+
+        alert("Gagal simpan nilai!");
+    }
 }
 
-}
+
