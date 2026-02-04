@@ -16,28 +16,19 @@ const db = getFirestore(app);
 // Export function supaya bisa dipakai di file lain
 export async function simpanNilai(nama, nilai){
 
-  if(!nama || nilai === undefined){
-    throw new Error("Data tidak lengkap");
-  }
-
   try {
 
-    const docRef = await addDoc(collection(db, "hasilTes"), {
-      nama,
-      nilai,
-      waktu: new Date(),
-      device: navigator.userAgent
+    await addDoc(collection(db, "hasilTes"), {
+      nama: nama,
+      nilai: nilai,
+      waktu: new Date()
     });
 
-    console.log("BERHASIL SIMPAN ID:", docRef.id);
-
-    return docRef.id;
+    console.log("BERHASIL SIMPAN!");
 
   } catch (e) {
-
     console.error("GAGAL SIMPAN:", e);
-    throw e;
-
   }
 
 }
+simpanNilai("Tes Manual", 88);
