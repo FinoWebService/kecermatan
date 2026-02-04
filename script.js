@@ -312,7 +312,7 @@ async function showResult(){
 
         await simpanNilai(userNameGlobal, avg);
 
-        alert("Nilai berhasil disimpan!");
+    
 
     } catch (e){
 
