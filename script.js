@@ -311,14 +311,14 @@ async function showResult(){
     // SIMPAN KE FIREBASE
     // ===============================
     try {
+  console.log("Mencoba simpan ke Firebase:", userNameGlobal, avg);
 
-        await simpanNilai(userNameGlobal, avg);
+  await simpanNilai(userNameGlobal, avg);
 
-        console.log("Nilai berhasil disimpan!");
+  alert("Nilai berhasil disimpan!");
+} catch (e) {
+  console.error("Error simpan nilai:", e);
+  alert("Gagal simpan nilai: " + e.message);
+}
 
-    } catch (e){
-
-        console.error("Gagal simpan:", e);
-
-    }
 }
