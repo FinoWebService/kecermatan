@@ -6,7 +6,6 @@ import {
     query, 
     where, 
     getDocs,
-    orderBy,
     doc,
     setDoc
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
@@ -130,10 +129,10 @@ export async function getRiwayatTes(userId){
     
     try {
         
+        // Query without orderBy to avoid index requirement
         const q = query(
             collection(db, "hasilTes"),
-            where("userId", "==", userId),
-            orderBy("waktu", "desc")
+            where("userId", "==", userId)
         );
         
         const snapshot = await getDocs(q);
@@ -145,6 +144,11 @@ export async function getRiwayatTes(userId){
                 id: doc.id,
                 ...doc.data()
             });
+        });
+        
+        // Sort in JavaScript instead (newest first)
+        history.sort((a, b) => {
+            return b.waktu.seconds - a.waktu.seconds;
         });
         
         return history;
