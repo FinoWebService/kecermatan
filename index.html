@@ -11,8 +11,26 @@
 
 <body>
 
+<!-- LOGIN -->
+<div class="auth-container" id="loginPage">
+   <div class="auth-box">
+      <h2>Login</h2>
+      <p>Masuk ke akun kamu</p>
+      
+      <input type="text" id="loginUsername" placeholder="Username">
+      <input type="password" id="loginPassword" placeholder="Password">
+      
+      <button onclick="login()">LOGIN</button>
+      
+      <p class="switch-auth">
+         Belum punya akun? <a href="#" onclick="showRegister()">Buat akun</a>
+      </p>
+   </div>
+</div>
+
+
 <!-- REGISTER -->
-<div class="auth-container" id="registerPage">
+<div class="auth-container" id="registerPage" style="display:none;">
    <div class="auth-box">
       <h2>Daftar Akun Baru</h2>
       <p>Buat akun untuk menyimpan riwayat tes kamu</p>
@@ -26,24 +44,6 @@
       
       <p class="switch-auth">
          Sudah punya akun? <a href="#" onclick="showLogin()">Login di sini</a>
-      </p>
-   </div>
-</div>
-
-
-<!-- LOGIN -->
-<div class="auth-container" id="loginPage" style="display:none;">
-   <div class="auth-box">
-      <h2>Login</h2>
-      <p>Masuk ke akun kamu</p>
-      
-      <input type="text" id="loginUsername" placeholder="Username">
-      <input type="password" id="loginPassword" placeholder="Password">
-      
-      <button onclick="login()">LOGIN</button>
-      
-      <p class="switch-auth">
-         Belum punya akun? <a href="#" onclick="showRegister()">Daftar di sini</a>
       </p>
    </div>
 </div>

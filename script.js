@@ -19,8 +19,8 @@ let currentUser = null;
 // AUTH NAVIGATION
 // ===============================
 window.showRegister = function(){
-    document.getElementById("registerPage").style.display = "flex";
     document.getElementById("loginPage").style.display = "none";
+    document.getElementById("registerPage").style.display = "flex";
 }
 
 window.showLogin = function(){
@@ -231,7 +231,7 @@ window.startExam = function(){
 // ===============================
 // BACK TO DASHBOARD
 // ===============================
-window.backToDashboard = function(){
+window.backToDashboard = async function(){
     
     const confirm = window.confirm("Yakin ingin kembali? Tes akan dibatalkan.");
     
@@ -243,11 +243,13 @@ window.backToDashboard = function(){
         
         stage = 1;
         scores = [];
+        count = 0;
+        correctCount = 0;
         
         document.getElementById("exam").style.display = "none";
         document.getElementById("result").style.display = "none";
         
-        showDashboard();
+        await showDashboard();
     }
 }
 
@@ -540,14 +542,22 @@ async function showResult(){
 // ===============================
 // FINISH EXAM
 // ===============================
-window.finishExam = function(){
+window.finishExam = async function(){
     
-    // Reset exam
+    // Reset exam state
     stage = 1;
     scores = [];
+    count = 0;
+    correctCount = 0;
     
+    // Clear timers
+    clearInterval(timer);
+    clearInterval(breakTimer);
+    
+    // Hide exam and result
     document.getElementById("exam").style.display = "none";
     document.getElementById("result").style.display = "none";
     
-    showDashboard();
+    // Show dashboard and reload history
+    await showDashboard();
 }
