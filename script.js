@@ -16,6 +16,35 @@ let currentUser = null;
 
 
 // ===============================
+// CHECK SESSION ON PAGE LOAD
+// ===============================
+window.addEventListener('DOMContentLoaded', function(){
+    
+    console.log("Checking session...");
+    
+    const savedUser = localStorage.getItem('currentUser');
+    
+    if(savedUser){
+        
+        try {
+            currentUser = JSON.parse(savedUser);
+            console.log("Session found:", currentUser.username);
+            
+            // Auto login - show dashboard
+            showDashboard();
+            
+        } catch(e){
+            console.error("Invalid session data:", e);
+            localStorage.removeItem('currentUser');
+        }
+        
+    } else {
+        console.log("No session found, showing login page");
+    }
+});
+
+
+// ===============================
 // AUTH NAVIGATION
 // ===============================
 window.showRegister = function(){
@@ -106,6 +135,10 @@ window.login = async function(){
             
             currentUser = result.user;
             
+            // Save session to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            console.log("Session saved for:", currentUser.username);
+            
             // Clear form
             document.getElementById("loginUsername").value = "";
             document.getElementById("loginPassword").value = "";
@@ -132,7 +165,11 @@ window.logout = function(){
     const confirm = window.confirm("Yakin ingin logout?");
     
     if(confirm){
+        
+        // Clear session
         currentUser = null;
+        localStorage.removeItem('currentUser');
+        console.log("Session cleared");
         
         document.getElementById("dashboard").style.display = "none";
         document.getElementById("loginPage").style.display = "flex";
