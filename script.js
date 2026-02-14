@@ -530,6 +530,8 @@ async function showResult(){
         console.log("Kirim data:", currentUser.namaLengkap, avg);
 
         await simpanNilai(currentUser.id, currentUser.namaLengkap, avg);
+        
+        console.log("Data berhasil disimpan!");
 
     } catch (e){
 
@@ -543,6 +545,11 @@ async function showResult(){
 // FINISH EXAM
 // ===============================
 window.finishExam = async function(){
+    
+    console.log("Finish exam called, returning to dashboard...");
+    
+    // Wait a bit to ensure Firebase data is saved
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Reset exam state
     stage = 1;
@@ -558,6 +565,12 @@ window.finishExam = async function(){
     document.getElementById("exam").style.display = "none";
     document.getElementById("result").style.display = "none";
     
-    // Show dashboard and reload history
-    await showDashboard();
+    // Show dashboard
+    document.getElementById("dashboard").style.display = "block";
+    
+    // Reload history to show new result
+    console.log("Reloading history...");
+    await loadHistory();
+    
+    console.log("Dashboard loaded with updated history!");
 }
