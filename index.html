@@ -11,56 +11,82 @@
 
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="login">
-
-   <div class="welcome-text">
-
-<p><b>Halooo, Selamat Datang! </b></p>
-
-<p>
-Di web ini, kamu akan menguji kecermatan, fokus,
-dan kecepatan berpikir kamu. Web ini 100% aman ya karena dibuat sama Pino (Kalo ada apa-apa sama devicemu protes aja sama dia)
-</p>
-
-<p>
-Cara mainnya gampang:
-</p>
-
-<p>
-- Kamu akan melihat beberapa simbol dan huruf.<br>
-- Satu simbol akan hilang.<br>
-- Tugas kamu adalah menebak huruf yang sesuai dengan simbol yang hilang.
-</p>
-
-<p>
-Kerjakan dengan cepat dan teliti,
-karena waktu terus berjalan
-</p>
-
-<p>
-Isi nama kamu dulu di bawah ini,
-lalu klik <b>LET'S GO ! ! !</b> kalau sudah siap.
-</p>
-
-<p>Semangat dan buktikan kemampuanmu! </p>
-
+<!-- REGISTER -->
+<div class="auth-container" id="registerPage">
+   <div class="auth-box">
+      <h2>Daftar Akun Baru</h2>
+      <p>Buat akun untuk menyimpan riwayat tes kamu</p>
+      
+      <input type="text" id="regUsername" placeholder="Username (min 4 karakter)">
+      <input type="text" id="regNamaLengkap" placeholder="Nama Lengkap">
+      <input type="password" id="regPassword" placeholder="Password (min 6 karakter)">
+      <input type="password" id="regPasswordConfirm" placeholder="Konfirmasi Password">
+      
+      <button onclick="register()">DAFTAR</button>
+      
+      <p class="switch-auth">
+         Sudah punya akun? <a href="#" onclick="showLogin()">Login di sini</a>
+      </p>
+   </div>
 </div>
+
+
+<!-- LOGIN -->
+<div class="auth-container" id="loginPage" style="display:none;">
+   <div class="auth-box">
+      <h2>Login</h2>
+      <p>Masuk ke akun kamu</p>
+      
+      <input type="text" id="loginUsername" placeholder="Username">
+      <input type="password" id="loginPassword" placeholder="Password">
+      
+      <button onclick="login()">LOGIN</button>
+      
+      <p class="switch-auth">
+         Belum punya akun? <a href="#" onclick="showRegister()">Daftar di sini</a>
+      </p>
+   </div>
+</div>
+
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard" style="display:none;">
    
-
-    <input type="text" id="nameInput" placeholder="Input Nama Lengkapmu">
-
-    <br>
-
-    <button onclick="startExam()">LET'S GO ! ! !</button>
-
+   <div class="dashboard-header">
+      <h2>Dashboard</h2>
+      <div class="user-info">
+         <span id="dashUserName"></span>
+         <button onclick="logout()" class="btn-logout">Logout</button>
+      </div>
+   </div>
+   
+   <div class="dashboard-content">
+      
+      <div class="card">
+         <h3>Mulai Tes Baru</h3>
+         <p>Uji kecermatan dan fokus kamu!</p>
+         <button onclick="startExam()" class="btn-primary">MULAI TES</button>
+      </div>
+      
+      <div class="card">
+         <h3>Riwayat Tes</h3>
+         <div id="historyList">
+            <p class="loading">Memuat riwayat...</p>
+         </div>
+      </div>
+      
+   </div>
+   
 </div>
 
 
 <!-- UJIAN -->
-<div class="wrapper" id="exam">
+<div class="wrapper" id="exam" style="display:none;">
 
-<div id="userName"></div>
+<div class="exam-header-bar">
+   <div id="userName"></div>
+   <button onclick="backToDashboard()" class="btn-back">Kembali ke Dashboard</button>
+</div>
 
 <div class="header">
 

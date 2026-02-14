@@ -1,39 +1,255 @@
 // ===============================
 // IMPORT FIREBASE
 // ===============================
-import { simpanNilai } from "./firebase.js";
+import { 
+    registerUser, 
+    loginUser, 
+    simpanNilai,
+    getRiwayatTes 
+} from "./firebase.js";
 
 
 // ===============================
 // GLOBAL USER
 // ===============================
-let userNameGlobal = "";
+let currentUser = null;
+
+
+// ===============================
+// AUTH NAVIGATION
+// ===============================
+window.showRegister = function(){
+    document.getElementById("registerPage").style.display = "flex";
+    document.getElementById("loginPage").style.display = "none";
+}
+
+window.showLogin = function(){
+    document.getElementById("registerPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+}
+
+
+// ===============================
+// REGISTER
+// ===============================
+window.register = async function(){
+    
+    const username = document.getElementById("regUsername").value.trim();
+    const namaLengkap = document.getElementById("regNamaLengkap").value.trim();
+    const password = document.getElementById("regPassword").value;
+    const passwordConfirm = document.getElementById("regPasswordConfirm").value;
+    
+    // Validasi
+    if(!username || !namaLengkap || !password || !passwordConfirm){
+        alert("Semua field harus diisi!");
+        return;
+    }
+    
+    if(username.length < 4){
+        alert("Username minimal 4 karakter!");
+        return;
+    }
+    
+    if(password.length < 6){
+        alert("Password minimal 6 karakter!");
+        return;
+    }
+    
+    if(password !== passwordConfirm){
+        alert("Password dan konfirmasi password tidak sama!");
+        return;
+    }
+    
+    try {
+        
+        const result = await registerUser(username, namaLengkap, password);
+        
+        if(result.success){
+            alert("Registrasi berhasil! Silakan login.");
+            showLogin();
+            
+            // Clear form
+            document.getElementById("regUsername").value = "";
+            document.getElementById("regNamaLengkap").value = "";
+            document.getElementById("regPassword").value = "";
+            document.getElementById("regPasswordConfirm").value = "";
+            
+        } else {
+            alert(result.message);
+        }
+        
+    } catch(e){
+        console.error("Register error:", e);
+        alert("Terjadi kesalahan saat registrasi!");
+    }
+}
 
 
 // ===============================
 // LOGIN
 // ===============================
-function startExam(){
-
-    let name = document.getElementById("nameInput").value;
-
-    if(name === ""){
-        alert("Masukkan nama dulu!");
+window.login = async function(){
+    
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    
+    if(!username || !password){
+        alert("Username dan password harus diisi!");
         return;
     }
+    
+    try {
+        
+        const result = await loginUser(username, password);
+        
+        if(result.success){
+            
+            currentUser = result.user;
+            
+            // Clear form
+            document.getElementById("loginUsername").value = "";
+            document.getElementById("loginPassword").value = "";
+            
+            // Show dashboard
+            showDashboard();
+            
+        } else {
+            alert(result.message);
+        }
+        
+    } catch(e){
+        console.error("Login error:", e);
+        alert("Terjadi kesalahan saat login!");
+    }
+}
 
-    userNameGlobal = name;
 
-    document.getElementById("login").style.display = "none";
+// ===============================
+// LOGOUT
+// ===============================
+window.logout = function(){
+    
+    const confirm = window.confirm("Yakin ingin logout?");
+    
+    if(confirm){
+        currentUser = null;
+        
+        document.getElementById("dashboard").style.display = "none";
+        document.getElementById("loginPage").style.display = "flex";
+    }
+}
+
+
+// ===============================
+// DASHBOARD
+// ===============================
+async function showDashboard(){
+    
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("registerPage").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    
+    // Set user name
+    document.getElementById("dashUserName").innerText = currentUser.namaLengkap;
+    
+    // Load history
+    await loadHistory();
+}
+
+
+// ===============================
+// LOAD HISTORY
+// ===============================
+async function loadHistory(){
+    
+    const historyDiv = document.getElementById("historyList");
+    historyDiv.innerHTML = '<p class="loading">Memuat riwayat...</p>';
+    
+    try {
+        
+        const history = await getRiwayatTes(currentUser.id);
+        
+        if(history.length === 0){
+            historyDiv.innerHTML = '<p class="empty">Belum ada riwayat tes.</p>';
+            return;
+        }
+        
+        let html = '<div class="history-items">';
+        
+        history.forEach((item, index) => {
+            
+            const date = item.waktu.toDate();
+            const dateStr = date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            html += `
+                <div class="history-item">
+                    <div class="history-number">#${history.length - index}</div>
+                    <div class="history-info">
+                        <div class="history-date">${dateStr}</div>
+                        <div class="history-score">Nilai: <strong>${item.nilai}</strong></div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        historyDiv.innerHTML = html;
+        
+    } catch(e){
+        console.error("Load history error:", e);
+        historyDiv.innerHTML = '<p class="error">Gagal memuat riwayat.</p>';
+    }
+}
+
+
+// ===============================
+// START EXAM
+// ===============================
+window.startExam = function(){
+    
+    if(!currentUser){
+        alert("Anda harus login terlebih dahulu!");
+        return;
+    }
+    
+    document.getElementById("dashboard").style.display = "none";
     document.getElementById("exam").style.display = "block";
-
-    document.getElementById("userName").innerText =
-        "Peserta: " + name;
-
+    
+    document.getElementById("userName").innerText = "Peserta: " + currentUser.namaLengkap;
+    
     startBreak();
 }
 
-window.startExam = startExam; // supaya bisa dipanggil dari HTML
+
+// ===============================
+// BACK TO DASHBOARD
+// ===============================
+window.backToDashboard = function(){
+    
+    const confirm = window.confirm("Yakin ingin kembali? Tes akan dibatalkan.");
+    
+    if(confirm){
+        
+        // Reset exam
+        clearInterval(timer);
+        clearInterval(breakTimer);
+        
+        stage = 1;
+        scores = [];
+        
+        document.getElementById("exam").style.display = "none";
+        document.getElementById("result").style.display = "none";
+        
+        showDashboard();
+    }
+}
 
 
 // ===============================
@@ -302,24 +518,36 @@ async function showResult(){
     let avg = Math.round(total / TOTAL_STAGE);
 
     html += `<br><b>Nilai Akhir: ${avg}</b>`;
+    html += `<br><br><button onclick="finishExam()">Kembali ke Dashboard</button>`;
 
     resultDiv.style.display = "block";
     resultDiv.innerHTML = html;
 
     try {
 
-        console.log("Kirim data:", userNameGlobal, avg);
+        console.log("Kirim data:", currentUser.namaLengkap, avg);
 
-        await simpanNilai(userNameGlobal, avg);
-
-    
+        await simpanNilai(currentUser.id, currentUser.namaLengkap, avg);
 
     } catch (e){
 
         console.error("Firebase error:", e);
-
         alert("Gagal simpan nilai!");
     }
 }
 
 
+// ===============================
+// FINISH EXAM
+// ===============================
+window.finishExam = function(){
+    
+    // Reset exam
+    stage = 1;
+    scores = [];
+    
+    document.getElementById("exam").style.display = "none";
+    document.getElementById("result").style.display = "none";
+    
+    showDashboard();
+}
