@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 </head>
 
@@ -66,6 +67,40 @@
          <h3>Mulai Tes Baru</h3>
          <p>Uji kecermatan dan fokus kamu!</p>
          <button onclick="startExam()" class="btn-primary">MULAI TES</button>
+      </div>
+      
+      <div class="card">
+         <h3>📊 Statistik Kamu</h3>
+         <div id="statsContent">
+            <div class="stats-grid">
+               <div class="stat-item">
+                  <div class="stat-number" id="totalTests">0</div>
+                  <div class="stat-label">Total Tes</div>
+               </div>
+               <div class="stat-item">
+                  <div class="stat-number" id="avgScore">0</div>
+                  <div class="stat-label">Rata-rata Nilai</div>
+               </div>
+               <div class="stat-item">
+                  <div class="stat-number" id="bestScore">0</div>
+                  <div class="stat-label">Nilai Tertinggi</div>
+               </div>
+               <div class="stat-item">
+                  <div class="stat-number" id="lastScore">-</div>
+                  <div class="stat-label">Tes Terakhir</div>
+               </div>
+            </div>
+            <div class="chart-container">
+               <canvas id="scoreChart"></canvas>
+            </div>
+         </div>
+      </div>
+      
+      <div class="card">
+         <h3>🏆 Badge & Pencapaian</h3>
+         <div id="badgesContent" class="badges-grid">
+            <!-- Badges will be rendered here -->
+         </div>
       </div>
       
       <div class="card">

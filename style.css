@@ -183,6 +183,41 @@ body{
 /* HISTORY */
 /* ============================= */
 
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat-item{
+    text-align:center;
+    padding:20px 10px;
+    background:#f8fafc;
+    border-radius:8px;
+    border:1px solid #e2e8f0;
+}
+
+.stat-number{
+    font-size:32px;
+    font-weight:700;
+    color:#2563eb;
+    margin-bottom:5px;
+}
+
+.stat-label{
+    font-size:13px;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+
+.chart-container{
+    position:relative;
+    height:250px;
+    margin-top:20px;
+}
+
 .history-items{
     max-height:400px;
     overflow-y:auto;
@@ -245,6 +280,64 @@ body{
 
 .error{
     color:#ef4444;
+}
+
+
+/* ============================= */
+/* BADGES */
+/* ============================= */
+
+.badges-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+    gap:15px;
+}
+
+.badge-item{
+    text-align:center;
+    padding:20px 15px;
+    border-radius:10px;
+    border:2px solid #e5e7eb;
+    transition:all 0.3s;
+}
+
+.badge-earned{
+    background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color:#fbbf24;
+}
+
+.badge-earned .badge-icon{
+    font-size:48px;
+    margin-bottom:10px;
+    animation:bounce 0.5s;
+}
+
+.badge-locked{
+    background:#f9fafb;
+    opacity:0.5;
+}
+
+.badge-locked .badge-icon{
+    font-size:48px;
+    margin-bottom:10px;
+    filter:grayscale(100%);
+}
+
+.badge-name{
+    font-weight:600;
+    font-size:14px;
+    color:#1f2937;
+    margin-bottom:5px;
+}
+
+.badge-desc{
+    font-size:11px;
+    color:#6b7280;
+}
+
+@keyframes bounce {
+    0%, 100% { transform:translateY(0); }
+    50% { transform:translateY(-10px); }
 }
 
 
@@ -557,6 +650,54 @@ body{
         width:35px;
         height:35px;
         font-size:12px;
+    }
+    
+    
+    /* STATS */
+    .stats-grid{
+        grid-template-columns:repeat(2, 1fr);
+        gap:10px;
+    }
+    
+    .stat-item{
+        padding:15px 10px;
+    }
+    
+    .stat-number{
+        font-size:24px;
+    }
+    
+    .stat-label{
+        font-size:11px;
+    }
+    
+    .chart-container{
+        height:200px;
+    }
+    
+    
+    /* BADGES */
+    .badges-grid{
+        grid-template-columns:repeat(2, 1fr);
+        gap:10px;
+    }
+    
+    .badge-item{
+        padding:15px 10px;
+    }
+    
+    .badge-earned .badge-icon,
+    .badge-locked .badge-icon{
+        font-size:36px;
+        margin-bottom:8px;
+    }
+    
+    .badge-name{
+        font-size:13px;
+    }
+    
+    .badge-desc{
+        font-size:10px;
     }
 
 }

@@ -191,6 +191,12 @@ async function showDashboard(){
     
     // Load history
     await loadHistory();
+    
+    // Load statistics
+    await loadStatistics();
+    
+    // Load badges
+    loadBadges();
 }
 
 
@@ -247,6 +253,120 @@ async function loadHistory(){
 
 
 // ===============================
+// LOAD STATISTICS
+// ===============================
+let scoreChart = null;
+
+async function loadStatistics(){
+    
+    try {
+        
+        const history = await getRiwayatTes(currentUser.id);
+        
+        if(history.length === 0){
+            document.getElementById("totalTests").innerText = "0";
+            document.getElementById("avgScore").innerText = "0";
+            document.getElementById("bestScore").innerText = "0";
+            document.getElementById("lastScore").innerText = "-";
+            return;
+        }
+        
+        // Calculate statistics
+        const scores = history.map(h => h.nilai);
+        const totalTests = scores.length;
+        const avgScore = Math.round(scores.reduce((a,b) => a+b, 0) / totalTests);
+        const bestScore = Math.max(...scores);
+        const lastScore = scores[0]; // Already sorted newest first
+        
+        // Update UI
+        document.getElementById("totalTests").innerText = totalTests;
+        document.getElementById("avgScore").innerText = avgScore;
+        document.getElementById("bestScore").innerText = bestScore;
+        document.getElementById("lastScore").innerText = lastScore;
+        
+        // Render chart
+        renderScoreChart(history);
+        
+    } catch(e){
+        console.error("Load statistics error:", e);
+    }
+}
+
+function renderScoreChart(history){
+    
+    const canvas = document.getElementById("scoreChart");
+    const ctx = canvas.getContext("2d");
+    
+    // Destroy previous chart if exists
+    if(scoreChart){
+        scoreChart.destroy();
+    }
+    
+    // Get last 10 tests
+    const last10 = history.slice(0, 10).reverse();
+    
+    const labels = last10.map((_, index) => `Tes ${index + 1}`);
+    const data = last10.map(h => h.nilai);
+    
+    scoreChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Nilai',
+                data: data,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14
+                    },
+                    bodyFont: {
+                        size: 13
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value;
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+// ===============================
 // START EXAM
 // ===============================
 window.startExam = function(){
@@ -262,6 +382,106 @@ window.startExam = function(){
     document.getElementById("userName").innerText = "Peserta: " + currentUser.namaLengkap;
     
     startBreak();
+}
+
+
+// ===============================
+// BADGE SYSTEM
+// ===============================
+const BADGES = [
+    {
+        id: 'first_test',
+        name: 'Pemula',
+        icon: '🎯',
+        description: 'Selesaikan tes pertama',
+        requirement: (stats) => stats.totalTests >= 1
+    },
+    {
+        id: 'five_tests',
+        name: 'Konsisten',
+        icon: '📚',
+        description: 'Selesaikan 5 tes',
+        requirement: (stats) => stats.totalTests >= 5
+    },
+    {
+        id: 'ten_tests',
+        name: 'Dedikasi',
+        icon: '💪',
+        description: 'Selesaikan 10 tes',
+        requirement: (stats) => stats.totalTests >= 10
+    },
+    {
+        id: 'score_50',
+        name: 'Cukup Baik',
+        icon: '⭐',
+        description: 'Raih nilai 50 atau lebih',
+        requirement: (stats) => stats.bestScore >= 50
+    },
+    {
+        id: 'score_70',
+        name: 'Bagus!',
+        icon: '🌟',
+        description: 'Raih nilai 70 atau lebih',
+        requirement: (stats) => stats.bestScore >= 70
+    },
+    {
+        id: 'score_85',
+        name: 'Luar Biasa',
+        icon: '✨',
+        description: 'Raih nilai 85 atau lebih',
+        requirement: (stats) => stats.bestScore >= 85
+    },
+    {
+        id: 'perfect',
+        name: 'Sempurna!',
+        icon: '🏆',
+        description: 'Raih nilai 100',
+        requirement: (stats) => stats.bestScore >= 100
+    },
+    {
+        id: 'avg_80',
+        name: 'Master',
+        icon: '👑',
+        description: 'Rata-rata nilai 80+',
+        requirement: (stats) => stats.avgScore >= 80
+    }
+];
+
+async function loadBadges(){
+    
+    try {
+        
+        const history = await getRiwayatTes(currentUser.id);
+        
+        const scores = history.map(h => h.nilai);
+        const stats = {
+            totalTests: scores.length,
+            avgScore: scores.length > 0 ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0,
+            bestScore: scores.length > 0 ? Math.max(...scores) : 0
+        };
+        
+        const badgesDiv = document.getElementById("badgesContent");
+        let html = '';
+        
+        BADGES.forEach(badge => {
+            
+            const earned = badge.requirement(stats);
+            const badgeClass = earned ? 'badge-earned' : 'badge-locked';
+            
+            html += `
+                <div class="badge-item ${badgeClass}">
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    <div class="badge-desc">${badge.description}</div>
+                </div>
+            `;
+        });
+        
+        badgesDiv.innerHTML = html || '<p class="empty">Belum ada badge.</p>';
+        
+    } catch(e){
+        console.error("Load badges error:", e);
+    }
 }
 
 
@@ -605,9 +825,11 @@ window.finishExam = async function(){
     // Show dashboard
     document.getElementById("dashboard").style.display = "block";
     
-    // Reload history to show new result
-    console.log("Reloading history...");
+    // Reload all dashboard data
+    console.log("Reloading history, statistics, and badges...");
     await loadHistory();
+    await loadStatistics();
+    loadBadges();
     
-    console.log("Dashboard loaded with updated history!");
+    console.log("Dashboard loaded with updated data!");
 }
