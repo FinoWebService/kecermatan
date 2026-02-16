@@ -15,187 +15,190 @@
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
    <div class="sidebar-header">
-      <div class="logo">CERMATIX</div>
-      <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+      <div class="sidebar-logo">CERMATIX</div>
+      <button class="sidebar-close" id="sidebarClose">&times;</button>
    </div>
    
-   <nav class="sidebar-nav">
-      <a href="#" class="nav-item active" onclick="showPage('home')">
-         <span class="nav-icon">🏠</span>
-         <span class="nav-text">Home</span>
+   <nav class="sidebar-menu">
+      <a href="#" class="menu-item active" data-page="home">
+         <span class="menu-icon">🏠</span>
+         <span class="menu-label">Home</span>
       </a>
-      <a href="#" class="nav-item" onclick="showPage('test')">
-         <span class="nav-icon">📝</span>
-         <span class="nav-text">Tes Kecermatan</span>
+      <a href="#" class="menu-item" data-page="test">
+         <span class="menu-icon">📝</span>
+         <span class="menu-label">TES KECERMATAN</span>
       </a>
-      <a href="#" class="nav-item" onclick="showPage('progress')">
-         <span class="nav-icon">📊</span>
-         <span class="nav-text">Progress</span>
+      <a href="#" class="menu-item" data-page="progress">
+         <span class="menu-icon">📊</span>
+         <span class="menu-label">PROGRESS</span>
       </a>
-      <a href="#" class="nav-item" onclick="showPage('leaderboard')">
-         <span class="nav-icon">🏆</span>
-         <span class="nav-text">Leaderboard</span>
+      <a href="#" class="menu-item" data-page="leaderboard">
+         <span class="menu-icon">🏆</span>
+         <span class="menu-label">LEADERBOARD</span>
       </a>
-      <a href="#" class="nav-item" onclick="showPage('history')">
-         <span class="nav-icon">🕐</span>
-         <span class="nav-text">Riwayat Tes</span>
+      <a href="#" class="menu-item" data-page="history">
+         <span class="menu-icon">🕐</span>
+         <span class="menu-label">RIWAYAT TES</span>
       </a>
    </nav>
-   
-   <div class="sidebar-footer">
-      <div class="user-profile" id="sidebarUser">
-         <div class="user-avatar">👤</div>
-         <div class="user-info">
-            <div class="user-name">Guest</div>
-            <button class="btn-login-sidebar" onclick="showLoginModal()">Login</button>
-         </div>
-      </div>
-   </div>
 </div>
 
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<!-- OVERLAY FOR MOBILE -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- MAIN CONTENT -->
-<div class="main-content">
+<!-- MAIN APP -->
+<div class="app-container">
    
-   <!-- TOP BAR -->
+   <!-- TOPBAR -->
    <div class="topbar">
-      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-      <div class="topbar-title">CERMATIX</div>
-      <div class="topbar-user" id="topbarUser">
-         <button class="btn-login-top" onclick="showLoginModal()">Login</button>
+      <button class="hamburger" id="hamburger">
+         <span></span>
+         <span></span>
+         <span></span>
+      </button>
+      
+      <div class="topbar-right">
+         <span id="topbarUserName">(Nama User)</span>
+         <div class="user-circle" id="userCircle">
+            <span>👤</span>
+         </div>
       </div>
    </div>
    
    
    <!-- HOME PAGE -->
-   <div class="page active" id="homePage">
-      <div class="hero-section">
-         <div class="hero-content">
-            <h1>Hello <span id="homeUserName">Guest</span>, welcome to</h1>
-            <div class="hero-logo">CERMATIX</div>
-            <p class="hero-subtitle">CAT Precision System by FinoEdo</p>
+   <div class="page-content active" id="homePage">
+      <div class="home-container">
+         
+         <div class="welcome-text">
+            <p>Hello <span id="homeUserName">(Nama User)</span>, welcome to</p>
+            <h1>CERMATIX</h1>
+            <p class="subtitle">CAT Precision System by FinoEdo</p>
          </div>
-      </div>
-      
-      <div class="home-actions">
-         <button class="btn-main-action" onclick="startTestFromHome()">
-            <span class="btn-icon"></span>
-            <span class="btn-text">MULAI TES KECERMATAN</span>
+         
+         <button class="btn-start-test" id="btnStartTest">
+            MULAI TES KECERMATAN
          </button>
          
-         <div class="quick-actions">
-            <div class="quick-action-card" onclick="showPage('progress')">
-               <div class="qa-icon">📊</div>
-               <div class="qa-label">Progress</div>
-            </div>
-            <div class="quick-action-card" onclick="showPage('leaderboard')">
-               <div class="qa-icon">🏆</div>
-               <div class="qa-label">Leaderboard</div>
-            </div>
-            <div class="quick-action-card" onclick="showPage('history')">
-               <div class="qa-icon">🕐</div>
-               <div class="qa-label">Riwayat Tes</div>
-            </div>
+         <div class="quick-menu">
+            <button class="quick-btn" data-page="progress">
+               <div class="quick-icon">📊</div>
+               <div class="quick-label">PROGRESS</div>
+            </button>
+            <button class="quick-btn" data-page="leaderboard">
+               <div class="quick-icon">🏆</div>
+               <div class="quick-label">LEADERBOARD</div>
+            </button>
+            <button class="quick-btn" data-page="history">
+               <div class="quick-icon">🕐</div>
+               <div class="quick-label">RIWAYAT TES</div>
+            </button>
          </div>
+         
       </div>
    </div>
    
    
    <!-- TEST PAGE -->
-   <div class="page" id="testPage">
-      <div class="page-header">
-         <h2>📝 Tes Kecermatan</h2>
-         <p>Uji fokus dan kecermatan Anda</p>
-      </div>
+   <div class="page-content" id="testPage">
+      <button class="btn-back" onclick="navigateTo('home')">
+         ← Kembali ke Home
+      </button>
       
-      <div class="test-info-card">
-         <h3>Informasi Tes</h3>
-         <ul>
-            <li>✅ Total: <strong>10 Kolom</strong></li>
-            <li>✅ Soal per kolom: <strong>50 Soal</strong></li>
-            <li>✅ Waktu per kolom: <strong>60 Detik</strong></li>
-            <li>✅ Persiapan kolom pertama: <strong>10 Detik</strong></li>
-            <li>✅ Persiapan kolom berikutnya: <strong>5 Detik</strong></li>
-         </ul>
-         <button class="btn-primary-large" onclick="startTestFromPage()">Mulai Tes Sekarang</button>
+      <div class="content-box">
+         <h2>📝 Tes Kecermatan</h2>
+         <p class="test-desc">Uji fokus dan kecepatan berpikir kamu dengan tes kecermatan ini!</p>
+         
+         <div class="test-info">
+            <h3>📋 Informasi Tes</h3>
+            <p>✅ Total: <strong>10 Kolom</strong></p>
+            <p>✅ Soal per kolom: <strong>50 Soal</strong></p>
+            <p>✅ Waktu per kolom: <strong>60 Detik</strong></p>
+            <p>✅ Persiapan kolom pertama: <strong>10 Detik</strong></p>
+            <p>✅ Persiapan kolom berikutnya: <strong>5 Detik</strong></p>
+         </div>
+         
+         <div class="test-rules">
+            <h3>📖 Cara Bermain</h3>
+            <p>1. Kamu akan melihat <strong>5 simbol</strong> yang dipasangkan dengan <strong>5 huruf</strong> (A-E)</p>
+            <p>2. Kemudian, <strong>4 simbol</strong> akan ditampilkan (1 simbol hilang)</p>
+            <p>3. Tugas kamu: <strong>Tebak huruf</strong> yang sesuai dengan simbol yang hilang</p>
+            <p>4. Jawab <strong>sebanyak mungkin</strong> dalam waktu 60 detik per kolom</p>
+            <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! 🎯</p>
+         </div>
+         
+         <button class="btn-primary" id="btnStartFromPage">
+            🚀 Mulai Tes Sekarang
+         </button>
+         
+         <p class="test-note">💡 <em>Pastikan kamu sudah siap dan fokus sebelum memulai tes!</em></p>
       </div>
    </div>
    
    
    <!-- PROGRESS PAGE -->
-   <div class="page" id="progressPage">
-      <div class="page-header">
+   <div class="page-content" id="progressPage">
+      <button class="btn-back" onclick="navigateTo('home')">
+         ← Kembali ke Home
+      </button>
+      
+      <div class="content-box">
          <h2>📊 Progress Kamu</h2>
-         <p>Lihat perkembangan performa kamu</p>
-      </div>
-      
-      <div class="stats-grid">
-         <div class="stat-card">
-            <div class="stat-icon">📈</div>
-            <div class="stat-number" id="totalTests2">0</div>
-            <div class="stat-label">Total Tes</div>
+         
+         <div class="stats-row">
+            <div class="stat-box">
+               <div class="stat-value" id="statTotal">0</div>
+               <div class="stat-label">Total Tes</div>
+            </div>
+            <div class="stat-box">
+               <div class="stat-value" id="statAvg">0</div>
+               <div class="stat-label">Rata-rata</div>
+            </div>
+            <div class="stat-box">
+               <div class="stat-value" id="statBest">0</div>
+               <div class="stat-label">Tertinggi</div>
+            </div>
+            <div class="stat-box">
+               <div class="stat-value" id="statLast">-</div>
+               <div class="stat-label">Terakhir</div>
+            </div>
          </div>
-         <div class="stat-card">
-            <div class="stat-icon">📊</div>
-            <div class="stat-number" id="avgScore2">0</div>
-            <div class="stat-label">Rata-rata</div>
-         </div>
-         <div class="stat-card">
-            <div class="stat-icon">🏆</div>
-            <div class="stat-number" id="bestScore2">0</div>
-            <div class="stat-label">Tertinggi</div>
-         </div>
-         <div class="stat-card">
-            <div class="stat-icon">🎯</div>
-            <div class="stat-number" id="lastScore2">-</div>
-            <div class="stat-label">Terakhir</div>
-         </div>
-      </div>
-      
-      <div class="chart-card">
-         <h3>Grafik Performa</h3>
-         <div class="chart-container">
+         
+         <div class="chart-box">
+            <h3>Grafik Performa</h3>
             <canvas id="scoreChart"></canvas>
          </div>
-      </div>
-      
-      <div class="badges-card">
-         <h3>🏆 Badge & Pencapaian</h3>
-         <div id="badgesContent" class="badges-grid">
-            <!-- Badges will be rendered here -->
+         
+         <div class="badges-box">
+            <h3>🏆 Badge & Pencapaian</h3>
+            <div id="badgesGrid" class="badges-grid"></div>
          </div>
       </div>
    </div>
    
    
    <!-- LEADERBOARD PAGE -->
-   <div class="page" id="leaderboardPage">
-      <div class="page-header">
-         <h2>🏆 Leaderboard</h2>
-         <p>Top performer hari ini</p>
-      </div>
+   <div class="page-content" id="leaderboardPage">
+      <button class="btn-back" onclick="navigateTo('home')">
+         ← Kembali ke Home
+      </button>
       
-      <div class="leaderboard-card">
-         <div class="leaderboard-content" id="leaderboardContent">
-            <p class="loading">Memuat leaderboard...</p>
-         </div>
+      <div class="content-box">
+         <h2>🏆 Leaderboard</h2>
+         <div id="leaderboardList"></div>
       </div>
    </div>
    
    
    <!-- HISTORY PAGE -->
-   <div class="page" id="historyPage">
-      <div class="page-header">
-         <h2>🕐 Riwayat Tes</h2>
-         <p>Semua hasil tes yang pernah kamu kerjakan</p>
-      </div>
+   <div class="page-content" id="historyPage">
+      <button class="btn-back" onclick="navigateTo('home')">
+         ← Kembali ke Home
+      </button>
       
-      <div class="history-card">
-         <div id="historyList">
-            <p class="loading">Memuat riwayat...</p>
-         </div>
+      <div class="content-box">
+         <h2>🕐 Riwayat Tes</h2>
+         <div id="historyList"></div>
       </div>
    </div>
    
@@ -203,94 +206,63 @@
 
 
 <!-- LOGIN MODAL -->
-<div class="modal" id="loginModal">
-   <div class="modal-content">
-      <div class="modal-header">
-         <h2>Login</h2>
-         <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-         <p>Masuk ke akun kamu untuk menyimpan progress</p>
-         
-         <input type="text" id="loginUsername" placeholder="Username" class="input-field">
-         <input type="password" id="loginPassword" placeholder="Password" class="input-field">
-         
-         <button onclick="login()" class="btn-modal-primary">LOGIN</button>
-         
-         <p class="modal-footer-text">
-            Belum punya akun? <a href="#" onclick="showRegisterModal()">Daftar di sini</a>
-         </p>
-      </div>
+<div class="modal-overlay" id="loginModal">
+   <div class="modal-box">
+      <button class="modal-close" id="closeLogin">&times;</button>
+      <h2>Login</h2>
+      <p>Masuk untuk menyimpan progress kamu</p>
+      <input type="text" id="loginUsername" placeholder="Username" class="input-box">
+      <input type="password" id="loginPassword" placeholder="Password" class="input-box">
+      <button class="btn-modal" id="btnLogin">LOGIN</button>
+      <p class="modal-link">Belum punya akun? <a href="#" id="linkRegister">Daftar di sini</a></p>
    </div>
 </div>
 
 
 <!-- REGISTER MODAL -->
-<div class="modal" id="registerModal">
-   <div class="modal-content">
-      <div class="modal-header">
-         <h2>Daftar Akun Baru</h2>
-         <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-         <p>Buat akun untuk menyimpan semua progress kamu</p>
-         
-         <input type="text" id="regUsername" placeholder="Username (min 4 karakter)" class="input-field">
-         <input type="text" id="regNamaLengkap" placeholder="Nama Lengkap" class="input-field">
-         <input type="password" id="regPassword" placeholder="Password (min 6 karakter)" class="input-field">
-         <input type="password" id="regPasswordConfirm" placeholder="Konfirmasi Password" class="input-field">
-         
-         <button onclick="register()" class="btn-modal-primary">DAFTAR</button>
-         
-         <p class="modal-footer-text">
-            Sudah punya akun? <a href="#" onclick="showLoginModal()">Login di sini</a>
-         </p>
-      </div>
+<div class="modal-overlay" id="registerModal">
+   <div class="modal-box">
+      <button class="modal-close" id="closeRegister">&times;</button>
+      <h2>Daftar Akun Baru</h2>
+      <p>Buat akun untuk menyimpan semua progress</p>
+      <input type="text" id="regUsername" placeholder="Username (min 4 karakter)" class="input-box">
+      <input type="text" id="regNamaLengkap" placeholder="Nama Lengkap" class="input-box">
+      <input type="password" id="regPassword" placeholder="Password (min 6 karakter)" class="input-box">
+      <input type="password" id="regPasswordConfirm" placeholder="Konfirmasi Password" class="input-box">
+      <button class="btn-modal" id="btnRegister">DAFTAR</button>
+      <p class="modal-link">Sudah punya akun? <a href="#" id="linkLogin">Login di sini</a></p>
    </div>
 </div>
 
 
 <!-- EXAM SCREEN -->
 <div class="exam-screen" id="examScreen">
-   
-   <div class="exam-topbar">
-      <button class="btn-back-exam" onclick="exitExam()">← Keluar</button>
-      <div class="exam-user" id="examUserName">Peserta: Guest</div>
+   <div class="exam-top">
+      <button class="btn-exit" id="btnExitExam">← Keluar</button>
+      <div class="exam-user-name" id="examUserDisplay">Peserta: Guest</div>
    </div>
    
-   <div class="exam-container">
-      
+   <div class="exam-main">
       <div class="exam-header">
-         <div class="exam-title">
+         <div class="exam-stage-label">
             <span>Tahap Ujian:</span>
             <strong>KECERMATAN</strong>
          </div>
-         
-         <div class="exam-timer">
+         <div class="exam-timer-box">
             <span>Sisa Waktu</span>
-            <div id="timer">01:00</div>
+            <div id="examTimer">01:00</div>
          </div>
       </div>
       
-      <div class="exam-content">
-         
-         <div id="stageInfo" class="stage-info"></div>
-         
-         <div class="mapping" id="mapping"></div>
-         
-         <div class="question-box" id="question"></div>
-         
-         <div class="answer-box" id="buttons"></div>
-         
-         <div class="exam-progress">
-            Soal: <span id="count">0</span>/50
-         </div>
-         
-         <div id="result" class="result-box"></div>
-         
+      <div class="exam-body">
+         <div id="stageInfo" class="stage-text"></div>
+         <div id="mapping" class="mapping-row"></div>
+         <div id="question" class="question-row"></div>
+         <div id="buttons" class="buttons-row"></div>
+         <div class="progress-text">Soal: <span id="questionCount">0</span>/50</div>
+         <div id="resultBox" class="result-box"></div>
       </div>
    </div>
-   
 </div>
 
 

@@ -23,14 +23,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-// ===============================
-// REGISTER USER
-// ===============================
 export async function registerUser(username, namaLengkap, password){
     
     try {
         
-        // Check if username exists
         const q = query(
             collection(db, "users"), 
             where("username", "==", username)
@@ -45,13 +41,12 @@ export async function registerUser(username, namaLengkap, password){
             };
         }
         
-        // Create user
         const userRef = doc(collection(db, "users"));
         
         await setDoc(userRef, {
             username: username,
             namaLengkap: namaLengkap,
-            password: password, // Note: In production, use proper encryption!
+            password: password,
             createdAt: new Date()
         });
         
@@ -67,9 +62,6 @@ export async function registerUser(username, namaLengkap, password){
 }
 
 
-// ===============================
-// LOGIN USER
-// ===============================
 export async function loginUser(username, password){
     
     try {
@@ -108,9 +100,6 @@ export async function loginUser(username, password){
 }
 
 
-// ===============================
-// SIMPAN NILAI
-// ===============================
 export async function simpanNilai(userId, nama, nilai){
     
     await addDoc(collection(db, "hasilTes"), {
@@ -122,14 +111,10 @@ export async function simpanNilai(userId, nama, nilai){
 }
 
 
-// ===============================
-// GET RIWAYAT TES
-// ===============================
 export async function getRiwayatTes(userId){
     
     try {
         
-        // Query without orderBy to avoid index requirement
         const q = query(
             collection(db, "hasilTes"),
             where("userId", "==", userId)
@@ -146,7 +131,6 @@ export async function getRiwayatTes(userId){
             });
         });
         
-        // Sort in JavaScript instead (newest first)
         history.sort((a, b) => {
             return b.waktu.seconds - a.waktu.seconds;
         });
@@ -160,9 +144,6 @@ export async function getRiwayatTes(userId){
 }
 
 
-// ===============================
-// GET LEADERBOARD
-// ===============================
 export async function getLeaderboard(limit = 10){
     
     try {
@@ -180,7 +161,6 @@ export async function getLeaderboard(limit = 10){
             });
         });
         
-        // Sort by score (highest first), then by time (newest first)
         allScores.sort((a, b) => {
             if(b.nilai !== a.nilai){
                 return b.nilai - a.nilai;
@@ -188,7 +168,6 @@ export async function getLeaderboard(limit = 10){
             return b.waktu.seconds - a.waktu.seconds;
         });
         
-        // Return top N results
         return allScores.slice(0, limit);
         
     } catch(e){
