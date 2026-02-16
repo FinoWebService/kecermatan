@@ -23,6 +23,7 @@ const hamburger = document.getElementById('hamburger');
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 const sidebarClose = document.getElementById('sidebarClose');
+const btnSidebarLogin = document.getElementById('btnSidebarLogin');
 const menuItems = document.querySelectorAll('.menu-item');
 const quickBtns = document.querySelectorAll('.quick-btn');
 const pages = document.querySelectorAll('.page-content');
@@ -78,6 +79,22 @@ sidebarClose.addEventListener('click', () => {
 sidebarOverlay.addEventListener('click', () => {
     sidebar.classList.remove('active');
     sidebarOverlay.classList.remove('active');
+});
+
+// Sidebar login/logout button
+btnSidebarLogin.addEventListener('click', () => {
+    if(currentUser){
+        // If logged in, logout
+        showLogoutConfirm();
+    } else {
+        // If guest, show login modal
+        loginModal.classList.add('active');
+        // Close sidebar on mobile
+        if(window.innerWidth <= 768){
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+    }
 });
 
 
@@ -297,11 +314,43 @@ function showLogoutConfirm(){
 function updateUILoggedIn(){
     document.getElementById('homeUserName').innerText = currentUser.namaLengkap;
     document.getElementById('topbarUserName').innerText = currentUser.namaLengkap;
+    
+    // Update sidebar footer
+    document.getElementById('sidebarUserInfo').innerHTML = `
+        <div class="sidebar-user-name">${currentUser.namaLengkap}</div>
+        <button class="btn-sidebar-logout" id="btnSidebarLogin">
+            Logout
+        </button>
+    `;
+    
+    // Re-attach event listener
+    const newBtn = document.getElementById('btnSidebarLogin');
+    newBtn.addEventListener('click', () => {
+        showLogoutConfirm();
+    });
 }
 
 function updateUIGuest(){
     document.getElementById('homeUserName').innerText = '(Nama User)';
     document.getElementById('topbarUserName').innerText = '(Nama User)';
+    
+    // Update sidebar footer
+    document.getElementById('sidebarUserInfo').innerHTML = `
+        <div class="sidebar-user-name">Guest</div>
+        <button class="btn-sidebar-login" id="btnSidebarLogin">
+            Login
+        </button>
+    `;
+    
+    // Re-attach event listener
+    const newBtn = document.getElementById('btnSidebarLogin');
+    newBtn.addEventListener('click', () => {
+        loginModal.classList.add('active');
+        if(window.innerWidth <= 768){
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+    });
 }
 
 

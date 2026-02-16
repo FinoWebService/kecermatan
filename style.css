@@ -127,6 +127,58 @@ body {
     letter-spacing: 0.5px;
 }
 
+.sidebar-footer {
+    padding: 20px;
+    background: #0f5555;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-user-info {
+    text-align: center;
+}
+
+.sidebar-user-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+}
+
+.btn-sidebar-login,
+.btn-sidebar-logout {
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-sidebar-login {
+    background: #5dd9c1;
+    color: #0f5555;
+}
+
+.btn-sidebar-login:hover {
+    background: #4bc9b1;
+    transform: translateY(-2px);
+}
+
+.btn-sidebar-logout {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-sidebar-logout:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
 
 /* ============================= */
 /* MAIN APP */
