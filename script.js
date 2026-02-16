@@ -60,6 +60,19 @@ window.addEventListener('DOMContentLoaded', function(){
             localStorage.removeItem('currentUser');
         }
     }
+    
+    // Check if there's an ongoing exam
+    const savedExam = localStorage.getItem('ongoingExam');
+    if(savedExam){
+        try {
+            const examData = JSON.parse(savedExam);
+            console.log("Ongoing exam found, restoring...");
+            restoreExam(examData);
+        } catch(e){
+            console.error("Invalid exam data:", e);
+            localStorage.removeItem('ongoingExam');
+        }
+    }
 });
 
 
@@ -400,6 +413,78 @@ function startExam(){
     startBreak();
 }
 
+// Warn user before closing/refreshing during exam
+window.addEventListener('beforeunload', (e) => {
+    const savedExam = localStorage.getItem('ongoingExam');
+    if(savedExam && examScreen.classList.contains('active')){
+        e.preventDefault();
+        e.returnValue = 'Tes sedang berlangsung. Yakin ingin keluar? Progress akan disimpan.';
+        return e.returnValue;
+    }
+});
+
+// Save exam state to localStorage
+function saveExamState(){
+    const examData = {
+        stage,
+        timeLeft,
+        count,
+        correctCount,
+        scores,
+        mapping,
+        correct,
+        isBreak: false,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('ongoingExam', JSON.stringify(examData));
+}
+
+// Restore exam from saved state
+function restoreExam(examData){
+    // Check if exam is not too old (max 2 hours)
+    const twoHours = 2 * 60 * 60 * 1000;
+    if(Date.now() - examData.timestamp > twoHours){
+        console.log("Exam too old, removing...");
+        localStorage.removeItem('ongoingExam');
+        return;
+    }
+    
+    // Restore state
+    stage = examData.stage;
+    timeLeft = examData.timeLeft;
+    count = examData.count;
+    correctCount = examData.correctCount;
+    scores = examData.scores;
+    mapping = examData.mapping;
+    correct = examData.correct;
+    
+    // Show exam screen
+    examScreen.classList.add('active');
+    
+    // Restore UI
+    document.getElementById('stageInfo').innerText = `Kolom ${stage}`;
+    document.getElementById('questionCount').innerText = count;
+    
+    // Restore mapping
+    renderMapping();
+    
+    // Restore question
+    createQuestion();
+    
+    // Restore buttons
+    createButtons();
+    
+    // Restart timer
+    startTimer();
+    
+    console.log("Exam restored successfully!");
+}
+
+// Clear exam state from localStorage
+function clearExamState(){
+    localStorage.removeItem('ongoingExam');
+}
+
 
 // ===============================
 // EXIT EXAM
@@ -418,6 +503,9 @@ btnExitExam.addEventListener('click', () => {
         
         examScreen.classList.remove('active');
         document.getElementById('resultBox').style.display = 'none';
+        
+        // Clear saved exam state
+        clearExamState();
     }
 });
 
@@ -816,6 +904,9 @@ function answer(a){
     }
     
     createQuestion();
+    
+    // Save state after each answer
+    saveExamState();
 }
 
 function startTimer(){
@@ -829,6 +920,11 @@ function startTimer(){
         
         document.getElementById('examTimer').innerText = 
             `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        
+        // Save state every 5 seconds
+        if(timeLeft % 5 === 0){
+            saveExamState();
+        }
         
         if(timeLeft <= 0){
             clearInterval(timer);
@@ -852,6 +948,9 @@ function startStage(){
     createQuestion();
     createButtons();
     startTimer();
+    
+    // Save state when stage starts
+    saveExamState();
 }
 
 function startBreak(){
@@ -931,6 +1030,9 @@ window.finishExam = async function(){
     
     examScreen.classList.remove('active');
     document.getElementById('resultBox').style.display = 'none';
+    
+    // Clear saved exam state after completion
+    clearExamState();
     
     navigateTo('home');
     
