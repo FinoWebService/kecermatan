@@ -405,23 +405,29 @@ a:active {
 
 .btn-start-test {
     width: 100%;
-    background: #1a6b6b;
+    background: #0d9488;
     color: white;
     border: none;
-    padding: 22px 40px;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 700;
+    padding: 35px 50px;
+    border-radius: 15px;
+    font-size: 24px;
+    font-weight: 900;
     cursor: pointer;
     margin-bottom: 25px;
-    box-shadow: 0 6px 15px rgba(26, 107, 107, 0.3);
-    transition: all 0.3s;
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.4);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
 }
 
 .btn-start-test:hover {
-    background: #0f5555;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(26, 107, 107, 0.4);
+    background: #0f766e;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(13, 148, 136, 0.5);
+}
+
+.btn-start-test:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(13, 148, 136, 0.4);
 }
 
 .quick-menu {
