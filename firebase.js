@@ -23,7 +23,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-export async function registerUser(username, namaLengkap, password){
+export async function registerUser(username, password){
     
     try {
         
@@ -45,7 +45,6 @@ export async function registerUser(username, namaLengkap, password){
         
         await setDoc(userRef, {
             username: username,
-            namaLengkap: namaLengkap,
             password: password,
             createdAt: new Date()
         });
@@ -88,8 +87,7 @@ export async function loginUser(username, password){
             success: true,
             user: {
                 id: userDoc.id,
-                username: userData.username,
-                namaLengkap: userData.namaLengkap
+                username: userData.username
             }
         };
         

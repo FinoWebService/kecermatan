@@ -196,11 +196,10 @@ document.getElementById('linkLogin').addEventListener('click', (e) => {
 btnRegister.addEventListener('click', async () => {
     
     const username = document.getElementById('regUsername').value.trim();
-    const namaLengkap = document.getElementById('regNamaLengkap').value.trim();
     const password = document.getElementById('regPassword').value;
     const passwordConfirm = document.getElementById('regPasswordConfirm').value;
     
-    if(!username || !namaLengkap || !password || !passwordConfirm){
+    if(!username || !password || !passwordConfirm){
         alert("Semua field harus diisi!");
         return;
     }
@@ -221,14 +220,13 @@ btnRegister.addEventListener('click', async () => {
     }
     
     try {
-        const result = await registerUser(username, namaLengkap, password);
+        const result = await registerUser(username, password);
         
         if(result.success){
             alert("Registrasi berhasil! Silakan login.");
             
             // Clear form
             document.getElementById('regUsername').value = "";
-            document.getElementById('regNamaLengkap').value = "";
             document.getElementById('regPassword').value = "";
             document.getElementById('regPasswordConfirm').value = "";
             
@@ -278,7 +276,7 @@ btnLogin.addEventListener('click', async () => {
             // Update UI
             updateUILoggedIn();
             
-            alert(`Selamat datang, ${currentUser.namaLengkap}!`);
+            alert(`Selamat datang, ${currentUser.username}!`);
         } else {
             alert(result.message);
         }
@@ -312,12 +310,12 @@ function showLogoutConfirm(){
 // UPDATE UI
 // ===============================
 function updateUILoggedIn(){
-    document.getElementById('homeUserName').innerText = currentUser.namaLengkap;
-    document.getElementById('topbarUserName').innerText = currentUser.namaLengkap;
+    document.getElementById('homeUserName').innerText = currentUser.username;
+    document.getElementById('topbarUserName').innerText = currentUser.username;
     
     // Update sidebar footer
     document.getElementById('sidebarUserInfo').innerHTML = `
-        <div class="sidebar-user-name">${currentUser.namaLengkap}</div>
+        <div class="sidebar-user-name">${currentUser.username}</div>
         <button class="btn-sidebar-logout" id="btnSidebarLogin">
             Logout
         </button>
@@ -378,7 +376,7 @@ btnStartFromPage.addEventListener('click', () => {
 // ===============================
 function startExam(){
     examScreen.classList.add('active');
-    document.getElementById('examUserDisplay').innerText = "Peserta: " + currentUser.namaLengkap;
+    document.getElementById('examUserDisplay').innerText = "Peserta: " + currentUser.username;
     
     startBreak();
 }
@@ -893,7 +891,7 @@ async function showResult(){
     resultBox.innerHTML = html;
     
     try {
-        await simpanNilai(currentUser.id, currentUser.namaLengkap, avg);
+        await simpanNilai(currentUser.id, currentUser.username, avg);
         console.log("Data tersimpan!");
     } catch(e){
         console.error("Firebase error:", e);
