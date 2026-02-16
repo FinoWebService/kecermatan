@@ -395,7 +395,7 @@ btnStartFromPage.addEventListener('click', () => {
 // ===============================
 function startExam(){
     examScreen.classList.add('active');
-    document.getElementById('examUserDisplay').innerText = "Peserta: " + currentUser.username;
+    // No need to display user name in new design
     
     startBreak();
 }

@@ -277,27 +277,29 @@
 <!-- EXAM SCREEN -->
 <div class="exam-screen" id="examScreen">
    <div class="exam-top">
-      <button class="btn-exit" id="btnExitExam">← Keluar</button>
-      <div class="exam-user-name" id="examUserDisplay">Peserta: Guest</div>
+      <div class="exam-tabs">
+         <div class="exam-tab active">KECERMATAN</div>
+      </div>
+      <div class="exam-timer-top">
+         <button class="btn-exit-top" id="btnExitExam">← Keluar</button>
+         <div class="timer-box">
+            <span class="timer-label">Sisa Waktu</span>
+            <span class="timer-value" id="examTimer">00:00:59</span>
+         </div>
+      </div>
    </div>
    
    <div class="exam-main">
-      <div class="exam-header">
-         <div class="exam-stage-label">
-            <span>Tahap Ujian:</span>
-            <strong>KECERMATAN</strong>
-         </div>
-         <div class="exam-timer-box">
-            <span>Sisa Waktu</span>
-            <div id="examTimer">01:00</div>
-         </div>
-      </div>
-      
-      <div class="exam-body">
-         <div id="stageInfo" class="stage-text"></div>
+      <div class="exam-content-box">
+         <div id="stageInfo" class="stage-title">Kolom 1</div>
+         
          <div id="mapping" class="mapping-row"></div>
+         
+         <div class="question-label">Pertanyaan</div>
          <div id="question" class="question-row"></div>
+         
          <div id="buttons" class="buttons-row"></div>
+         
          <div class="progress-text">Soal: <span id="questionCount">0</span>/50</div>
          <div id="resultBox" class="result-box"></div>
       </div>

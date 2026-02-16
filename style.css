@@ -345,11 +345,11 @@ a:active {
 }
 
 .btn-back {
-    background: #0f5555;
+    background: #666;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -931,8 +931,8 @@ a:active {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background: #a3d5d3;
+    height: 100vh;
+    background: #f5f5f5;
     z-index: 3000;
     display: none;
     flex-direction: column;
@@ -944,103 +944,108 @@ a:active {
 
 .exam-top {
     background: white;
-    padding: 15px 25px;
+    padding: 0;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-bottom: 2px solid #e0e0e0;
 }
 
-.btn-exit {
+.exam-tabs {
+    display: flex;
+    padding-left: 40px;
+}
+
+.exam-tab {
+    padding: 20px 40px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.exam-tab.active {
+    color: #1a6b6b;
+    border-bottom-color: #1a6b6b;
+    background: #f8f8f8;
+}
+
+.exam-timer-top {
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-exit-top {
     background: #666;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
-.btn-exit:hover {
+.btn-exit-top:hover {
     background: #444;
 }
 
-.exam-user-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-}
-
-.exam-main {
-    flex: 1;
-    padding: 25px;
-    overflow-y: auto;
-}
-
-.exam-header {
-    background: white;
-    padding: 20px 30px;
-    border-radius: 12px;
+.timer-box {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
-.exam-stage-label span {
-    font-size: 15px;
-    color: #666;
-}
-
-.exam-stage-label strong {
-    color: #1a6b6b;
-    font-size: 18px;
-    margin-left: 8px;
-    border: 2px solid #1a6b6b;
-    padding: 5px 12px;
-    border-radius: 6px;
-}
-
-.exam-timer-box {
-    text-align: center;
-    background: #f0f9ff;
-    padding: 12px 30px;
-    border-radius: 10px;
-}
-
-.exam-timer-box span {
-    display: block;
+.timer-label {
     font-size: 12px;
     color: #666;
     margin-bottom: 5px;
 }
 
-#examTimer {
-    font-size: 32px;
-    color: #1a6b6b;
+.timer-value {
+    font-size: 28px;
     font-weight: 700;
+    color: #1a6b6b;
+    font-family: 'Courier New', monospace;
 }
 
-.exam-body {
+.exam-main {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.exam-content-box {
     background: white;
-    padding: 40px 30px;
-    border-radius: 12px;
+    padding: 50px 60px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 1000px;
+    width: 100%;
     text-align: center;
 }
 
-.stage-text {
-    font-size: 20px;
-    color: #666;
-    margin-bottom: 25px;
+.stage-title {
+    font-size: 22px;
+    color: #999;
+    margin-bottom: 40px;
     font-weight: 600;
 }
 
 .mapping-row {
     display: flex;
     justify-content: center;
-    gap: 35px;
-    margin: 30px 0;
+    gap: 60px;
+    margin: 40px 0;
 }
 
 .map-item {
@@ -1048,73 +1053,85 @@ a:active {
 }
 
 .map-symbol {
-    font-size: 48px;
+    font-size: 56px;
     color: #999;
-    font-weight: 700;
+    font-weight: 400;
+    margin-bottom: 12px;
 }
 
 .map-letter {
-    margin-top: 8px;
-    font-size: 18px;
+    font-size: 20px;
     color: #666;
     font-weight: 600;
 }
 
+.question-label {
+    font-size: 16px;
+    color: #666;
+    margin: 40px 0 20px 0;
+    text-align: left;
+}
+
 .question-row {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
+    justify-content: flex-start;
+    gap: 20px;
+    margin: 20px 0 40px 0;
 }
 
 .q-item {
-    width: 70px;
-    height: 70px;
-    border: 3px solid #333;
+    width: 80px;
+    height: 80px;
+    border: 3px solid #ccc;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
-    font-weight: 700;
-    background: #f9f9f9;
+    font-size: 40px;
+    font-weight: 400;
+    background: white;
+    color: #999;
 }
 
 .buttons-row {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
+    justify-content: flex-start;
+    gap: 20px;
+    margin: 40px 0;
 }
 
 .buttons-row button {
-    width: 140px;
-    height: 50px;
-    border: 2px solid #1a6b6b;
-    background: white;
+    min-width: 160px;
+    height: 55px;
+    border: 2px solid #d0d0d0;
+    background: #f0fffe;
     color: #1a6b6b;
-    border-radius: 10px;
-    font-size: 18px;
+    border-radius: 8px;
+    font-size: 20px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .buttons-row button:hover {
     background: #1a6b6b;
     color: white;
+    border-color: #1a6b6b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(26, 107, 107, 0.3);
 }
 
 .progress-text {
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 16px;
     color: #666;
-    font-weight: 600;
+    font-weight: 500;
+    text-align: left;
 }
 
 .progress-text span {
     color: #1a6b6b;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
 }
 
@@ -1199,14 +1216,50 @@ a:active {
         gap: 15px;
     }
     
+    .exam-tabs {
+        padding-left: 20px;
+    }
+    
+    .exam-tab {
+        padding: 15px 25px;
+        font-size: 12px;
+    }
+    
+    .exam-timer-top {
+        padding: 15px 20px;
+        gap: 15px;
+    }
+    
+    .btn-exit-top {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .timer-value {
+        font-size: 24px;
+    }
+    
+    .exam-main {
+        padding: 20px;
+    }
+    
+    .exam-content-box {
+        padding: 30px 20px;
+    }
+    
     .mapping-row {
         flex-wrap: wrap;
         gap: 20px;
     }
     
+    .map-symbol {
+        font-size: 40px;
+    }
+    
     .question-row {
         flex-wrap: wrap;
         gap: 12px;
+        justify-content: center;
     }
     
     .q-item {
@@ -1217,10 +1270,13 @@ a:active {
     
     .buttons-row {
         flex-wrap: wrap;
+        justify-content: center;
     }
     
     .buttons-row button {
-        width: 45%;
+        min-width: 45%;
+        height: 50px;
+        font-size: 18px;
     }
     
 }
