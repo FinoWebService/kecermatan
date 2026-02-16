@@ -195,9 +195,24 @@ document.getElementById('linkLogin').addEventListener('click', (e) => {
 // ===============================
 btnRegister.addEventListener('click', async () => {
     
-    const username = document.getElementById('regUsername').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    console.log("Register button clicked");
+    
+    const usernameInput = document.getElementById('regUsername');
+    const passwordInput = document.getElementById('regPassword');
+    const passwordConfirmInput = document.getElementById('regPasswordConfirm');
+    
+    if(!usernameInput || !passwordInput || !passwordConfirmInput){
+        console.error("Input elements not found!");
+        alert("Error: Form tidak ditemukan. Silakan refresh halaman.");
+        return;
+    }
+    
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    const passwordConfirm = passwordConfirmInput.value;
+    
+    console.log("Username:", username);
+    console.log("Password length:", password.length);
     
     if(!username || !password || !passwordConfirm){
         alert("Semua field harus diisi!");
@@ -219,16 +234,20 @@ btnRegister.addEventListener('click', async () => {
         return;
     }
     
+    console.log("Validation passed, calling registerUser...");
+    
     try {
         const result = await registerUser(username, password);
+        
+        console.log("Register result:", result);
         
         if(result.success){
             alert("Registrasi berhasil! Silakan login.");
             
-            // Clear form
-            document.getElementById('regUsername').value = "";
-            document.getElementById('regPassword').value = "";
-            document.getElementById('regPasswordConfirm').value = "";
+            // Clear form safely
+            if(usernameInput) usernameInput.value = "";
+            if(passwordInput) passwordInput.value = "";
+            if(passwordConfirmInput) passwordConfirmInput.value = "";
             
             // Show login modal
             registerModal.classList.remove('active');
@@ -239,7 +258,7 @@ btnRegister.addEventListener('click', async () => {
         
     } catch(e){
         console.error("Register error:", e);
-        alert("Terjadi kesalahan saat registrasi!");
+        alert("Terjadi kesalahan saat registrasi: " + e.message);
     }
 });
 
