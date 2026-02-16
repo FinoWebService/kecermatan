@@ -8,10 +8,89 @@
     box-sizing: border-box;
 }
 
+/* Remove focus outline on click */
+*:focus {
+    outline: none;
+}
+
+/* Remove tap highlight on mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/* Prevent text cursor on all elements except inputs */
+body,
+div,
+span,
+p,
+h1, h2, h3, h4, h5, h6,
+button,
+a {
+    cursor: default !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Allow text selection and cursor only in input fields */
+input,
+textarea {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+    cursor: text !important;
+}
+
+/* Pointer cursor for interactive elements */
+button,
+a,
+.menu-item,
+.quick-btn,
+.btn-back,
+.hamburger {
+    cursor: pointer !important;
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: #a3d5d3;
     overflow-x: hidden;
+}
+
+
+/* Remove focus outline on buttons and links */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
+
+/* Remove default button styles */
+button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Remove link underline and default styles */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:focus,
+a:active {
+    outline: none;
 }
 
 
