@@ -5,18 +5,20 @@ import {
     registerUser, 
     loginUser, 
     simpanNilai,
-    getRiwayatTes 
+    getRiwayatTes,
+    getLeaderboard
 } from "./firebase.js";
 
 
 // ===============================
-// GLOBAL USER
+// GLOBAL STATE
 // ===============================
 let currentUser = null;
+let currentPage = 'home';
 
 
 // ===============================
-// CHECK SESSION ON PAGE LOAD
+// SESSION CHECK ON PAGE LOAD
 // ===============================
 window.addEventListener('DOMContentLoaded', function(){
     
@@ -25,36 +27,97 @@ window.addEventListener('DOMContentLoaded', function(){
     const savedUser = localStorage.getItem('currentUser');
     
     if(savedUser){
-        
         try {
             currentUser = JSON.parse(savedUser);
             console.log("Session found:", currentUser.username);
-            
-            // Auto login - show dashboard
-            showDashboard();
-            
+            updateUIForLoggedIn();
+            loadUserData();
         } catch(e){
             console.error("Invalid session data:", e);
             localStorage.removeItem('currentUser');
         }
-        
     } else {
-        console.log("No session found, showing login page");
+        console.log("No session found, showing guest mode");
     }
 });
 
 
 // ===============================
-// AUTH NAVIGATION
+// SIDEBAR TOGGLE
 // ===============================
-window.showRegister = function(){
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("registerPage").style.display = "flex";
+window.toggleSidebar = function(){
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
 }
 
-window.showLogin = function(){
-    document.getElementById("registerPage").style.display = "none";
-    document.getElementById("loginPage").style.display = "flex";
+
+// ===============================
+// PAGE NAVIGATION
+// ===============================
+window.showPage = function(pageName){
+    
+    // Remove active from all nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Add active to clicked nav item
+    event.target.closest('.nav-item').classList.add('active');
+    
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Show selected page
+    const pageMap = {
+        'home': 'homePage',
+        'test': 'testPage',
+        'progress': 'progressPage',
+        'leaderboard': 'leaderboardPage',
+        'history': 'historyPage'
+    };
+    
+    const pageId = pageMap[pageName];
+    if(pageId){
+        document.getElementById(pageId).classList.add('active');
+        currentPage = pageName;
+        
+        // Load data for specific pages
+        if(pageName === 'progress' && currentUser){
+            loadProgressData();
+        } else if(pageName === 'leaderboard'){
+            loadLeaderboardData();
+        } else if(pageName === 'history' && currentUser){
+            loadHistory();
+        }
+    }
+    
+    // Close sidebar on mobile
+    if(window.innerWidth <= 768){
+        toggleSidebar();
+    }
+}
+
+
+// ===============================
+// MODAL FUNCTIONS
+// ===============================
+window.showLoginModal = function(){
+    document.getElementById('loginModal').classList.add('active');
+}
+
+window.showRegisterModal = function(){
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('registerModal').classList.add('active');
+}
+
+window.closeModal = function(){
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('registerModal').classList.remove('active');
 }
 
 
@@ -68,7 +131,6 @@ window.register = async function(){
     const password = document.getElementById("regPassword").value;
     const passwordConfirm = document.getElementById("regPasswordConfirm").value;
     
-    // Validasi
     if(!username || !namaLengkap || !password || !passwordConfirm){
         alert("Semua field harus diisi!");
         return;
@@ -95,7 +157,6 @@ window.register = async function(){
         
         if(result.success){
             alert("Registrasi berhasil! Silakan login.");
-            showLogin();
             
             // Clear form
             document.getElementById("regUsername").value = "";
@@ -103,6 +164,8 @@ window.register = async function(){
             document.getElementById("regPassword").value = "";
             document.getElementById("regPasswordConfirm").value = "";
             
+            // Show login modal
+            showLoginModal();
         } else {
             alert(result.message);
         }
@@ -135,7 +198,7 @@ window.login = async function(){
             
             currentUser = result.user;
             
-            // Save session to localStorage
+            // Save session
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             console.log("Session saved for:", currentUser.username);
             
@@ -143,8 +206,14 @@ window.login = async function(){
             document.getElementById("loginUsername").value = "";
             document.getElementById("loginPassword").value = "";
             
-            // Show dashboard
-            showDashboard();
+            // Close modal
+            closeModal();
+            
+            // Update UI
+            updateUIForLoggedIn();
+            loadUserData();
+            
+            alert(`Selamat datang, ${currentUser.namaLengkap}!`);
             
         } else {
             alert(result.message);
@@ -171,32 +240,447 @@ window.logout = function(){
         localStorage.removeItem('currentUser');
         console.log("Session cleared");
         
-        document.getElementById("dashboard").style.display = "none";
-        document.getElementById("loginPage").style.display = "flex";
+        // Update UI
+        updateUIForGuest();
+        
+        // Go to home
+        showPage('home');
+        
+        alert("Logout berhasil!");
     }
 }
 
 
 // ===============================
-// DASHBOARD
+// UPDATE UI FOR LOGGED IN USER
 // ===============================
-async function showDashboard(){
+function updateUIForLoggedIn(){
     
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("registerPage").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+    // Update home page greeting
+    document.getElementById('homeUserName').innerText = currentUser.namaLengkap;
     
-    // Set user name
-    document.getElementById("dashUserName").innerText = currentUser.namaLengkap;
+    // Update topbar
+    document.getElementById('topbarUser').innerHTML = `
+        <div class="user-badge">
+            <span class="user-badge-name">${currentUser.namaLengkap}</span>
+            <button class="btn-logout-small" onclick="logout()">Logout</button>
+        </div>
+    `;
     
-    // Load history
-    await loadHistory();
+    // Update sidebar
+    document.getElementById('sidebarUser').innerHTML = `
+        <div class="user-avatar">👤</div>
+        <div class="user-info">
+            <div class="user-name">${currentUser.namaLengkap}</div>
+            <button class="btn-logout-sidebar" onclick="logout()">Logout</button>
+        </div>
+    `;
+}
+
+
+// ===============================
+// UPDATE UI FOR GUEST
+// ===============================
+function updateUIForGuest(){
     
-    // Load statistics
-    await loadStatistics();
+    // Reset home page greeting
+    document.getElementById('homeUserName').innerText = 'Guest';
     
-    // Load badges
-    loadBadges();
+    // Reset topbar
+    document.getElementById('topbarUser').innerHTML = `
+        <button class="btn-login-top" onclick="showLoginModal()">Login</button>
+    `;
+    
+    // Reset sidebar
+    document.getElementById('sidebarUser').innerHTML = `
+        <div class="user-avatar">👤</div>
+        <div class="user-info">
+            <div class="user-name">Guest</div>
+            <button class="btn-login-sidebar" onclick="showLoginModal()">Login</button>
+        </div>
+    `;
+}
+
+
+// ===============================
+// LOAD USER DATA
+// ===============================
+async function loadUserData(){
+    if(currentPage === 'progress'){
+        await loadProgressData();
+    } else if(currentPage === 'history'){
+        await loadHistory();
+    }
+}
+
+
+// ===============================
+// START TEST FROM HOME
+// ===============================
+window.startTestFromHome = function(){
+    if(!currentUser){
+        alert("Silakan login terlebih dahulu untuk memulai tes!");
+        showLoginModal();
+        return;
+    }
+    
+    startExam();
+}
+
+
+// ===============================
+// START TEST FROM PAGE
+// ===============================
+window.startTestFromPage = function(){
+    if(!currentUser){
+        alert("Silakan login terlebih dahulu untuk memulai tes!");
+        showLoginModal();
+        return;
+    }
+    
+    startExam();
+}
+
+
+// ===============================
+// START EXAM
+// ===============================
+function startExam(){
+    
+    document.querySelector('.main-content').style.display = 'none';
+    document.getElementById('examScreen').classList.add('active');
+    
+    document.getElementById('examUserName').innerText = "Peserta: " + currentUser.namaLengkap;
+    
+    startBreak();
+}
+
+
+// ===============================
+// EXIT EXAM
+// ===============================
+window.exitExam = function(){
+    
+    const confirm = window.confirm("Yakin ingin keluar? Tes akan dibatalkan.");
+    
+    if(confirm){
+        
+        // Reset exam
+        clearInterval(timer);
+        clearInterval(breakTimer);
+        
+        stage = 1;
+        scores = [];
+        count = 0;
+        correctCount = 0;
+        
+        // Hide exam
+        document.getElementById('examScreen').classList.remove('active');
+        document.querySelector('.main-content').style.display = 'block';
+        
+        // Reset result
+        document.getElementById('result').style.display = 'none';
+    }
+}
+
+
+// ===============================
+// LOAD PROGRESS DATA
+// ===============================
+async function loadProgressData(){
+    
+    if(!currentUser){
+        // Show guest message
+        document.getElementById('totalTests2').innerText = '0';
+        document.getElementById('avgScore2').innerText = '0';
+        document.getElementById('bestScore2').innerText = '0';
+        document.getElementById('lastScore2').innerText = '-';
+        document.getElementById('badgesContent').innerHTML = '<p class="empty">Login untuk melihat badge kamu</p>';
+        return;
+    }
+    
+    try {
+        
+        const history = await getRiwayatTes(currentUser.id);
+        
+        if(history.length === 0){
+            document.getElementById('totalTests2').innerText = '0';
+            document.getElementById('avgScore2').innerText = '0';
+            document.getElementById('bestScore2').innerText = '0';
+            document.getElementById('lastScore2').innerText = '-';
+            renderScoreChart([]);
+            loadBadges([], {totalTests: 0, avgScore: 0, bestScore: 0});
+            return;
+        }
+        
+        // Calculate statistics
+        const scores = history.map(h => h.nilai);
+        const totalTests = scores.length;
+        const avgScore = Math.round(scores.reduce((a,b) => a+b, 0) / totalTests);
+        const bestScore = Math.max(...scores);
+        const lastScore = scores[0];
+        
+        // Update UI
+        document.getElementById('totalTests2').innerText = totalTests;
+        document.getElementById('avgScore2').innerText = avgScore;
+        document.getElementById('bestScore2').innerText = bestScore;
+        document.getElementById('lastScore2').innerText = lastScore;
+        
+        // Render chart
+        renderScoreChart(history);
+        
+        // Load badges
+        loadBadges(history, {totalTests, avgScore, bestScore});
+        
+    } catch(e){
+        console.error("Load progress error:", e);
+    }
+}
+
+
+// ===============================
+// RENDER SCORE CHART
+// ===============================
+let scoreChart = null;
+
+function renderScoreChart(history){
+    
+    const canvas = document.getElementById("scoreChart");
+    
+    if(!canvas) return;
+    
+    const ctx = canvas.getContext("2d");
+    
+    // Destroy previous chart if exists
+    if(scoreChart){
+        scoreChart.destroy();
+    }
+    
+    if(history.length === 0){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#999';
+        ctx.textAlign = 'center';
+        ctx.fillText('Belum ada data tes', canvas.width/2, canvas.height/2);
+        return;
+    }
+    
+    // Get last 10 tests
+    const last10 = history.slice(0, 10).reverse();
+    
+    const labels = last10.map((_, index) => `Tes ${index + 1}`);
+    const data = last10.map(h => h.nilai);
+    
+    scoreChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Nilai',
+                data: data,
+                borderColor: '#0d9488',
+                backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointBackgroundColor: '#0d9488',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14
+                    },
+                    bodyFont: {
+                        size: 13
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value;
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+// ===============================
+// BADGE SYSTEM
+// ===============================
+const BADGES = [
+    {
+        id: 'first_test',
+        name: 'Pemula',
+        icon: '🎯',
+        description: 'Selesaikan tes pertama',
+        requirement: (stats) => stats.totalTests >= 1
+    },
+    {
+        id: 'five_tests',
+        name: 'Konsisten',
+        icon: '📚',
+        description: 'Selesaikan 5 tes',
+        requirement: (stats) => stats.totalTests >= 5
+    },
+    {
+        id: 'ten_tests',
+        name: 'Dedikasi',
+        icon: '💪',
+        description: 'Selesaikan 10 tes',
+        requirement: (stats) => stats.totalTests >= 10
+    },
+    {
+        id: 'score_50',
+        name: 'Cukup Baik',
+        icon: '⭐',
+        description: 'Raih nilai 50+',
+        requirement: (stats) => stats.bestScore >= 50
+    },
+    {
+        id: 'score_70',
+        name: 'Bagus!',
+        icon: '🌟',
+        description: 'Raih nilai 70+',
+        requirement: (stats) => stats.bestScore >= 70
+    },
+    {
+        id: 'score_85',
+        name: 'Luar Biasa',
+        icon: '✨',
+        description: 'Raih nilai 85+',
+        requirement: (stats) => stats.bestScore >= 85
+    },
+    {
+        id: 'perfect',
+        name: 'Sempurna!',
+        icon: '🏆',
+        description: 'Raih nilai 100',
+        requirement: (stats) => stats.bestScore >= 100
+    },
+    {
+        id: 'avg_80',
+        name: 'Master',
+        icon: '👑',
+        description: 'Rata-rata 80+',
+        requirement: (stats) => stats.avgScore >= 80
+    }
+];
+
+function loadBadges(history, stats){
+    
+    const badgesDiv = document.getElementById("badgesContent");
+    let html = '';
+    
+    BADGES.forEach(badge => {
+        
+        const earned = badge.requirement(stats);
+        const badgeClass = earned ? 'badge-earned' : 'badge-locked';
+        
+        html += `
+            <div class="badge-item ${badgeClass}">
+                <div class="badge-icon">${badge.icon}</div>
+                <div class="badge-name">${badge.name}</div>
+                <div class="badge-desc">${badge.description}</div>
+            </div>
+        `;
+    });
+    
+    badgesDiv.innerHTML = html || '<p class="empty">Belum ada badge.</p>';
+}
+
+
+// ===============================
+// LOAD LEADERBOARD
+// ===============================
+async function loadLeaderboardData(){
+    
+    const contentDiv = document.getElementById('leaderboardContent');
+    contentDiv.innerHTML = '<p class="loading">Memuat leaderboard...</p>';
+    
+    try {
+        
+        const leaderboard = await getLeaderboard();
+        
+        if(leaderboard.length === 0){
+            contentDiv.innerHTML = '<p class="empty">Belum ada data leaderboard.</p>';
+            return;
+        }
+        
+        let html = '<div class="leaderboard-list">';
+        
+        leaderboard.forEach((entry, index) => {
+            
+            const rank = index + 1;
+            let rankClass = '';
+            let medal = '';
+            
+            if(rank === 1){
+                rankClass = 'rank-1';
+                medal = '🥇';
+            } else if(rank === 2){
+                rankClass = 'rank-2';
+                medal = '🥈';
+            } else if(rank === 3){
+                rankClass = 'rank-3';
+                medal = '🥉';
+            }
+            
+            const date = entry.waktu.toDate();
+            const dateStr = date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            html += `
+                <div class="leaderboard-item ${rankClass}">
+                    <div class="lb-rank">${medal || rank}</div>
+                    <div class="lb-info">
+                        <div class="lb-name">${entry.nama}</div>
+                        <div class="lb-date">${dateStr}</div>
+                    </div>
+                    <div class="lb-score">${entry.nilai}</div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        contentDiv.innerHTML = html;
+        
+    } catch(e){
+        console.error("Load leaderboard error:", e);
+        contentDiv.innerHTML = '<p class="error">Gagal memuat leaderboard.</p>';
+    }
 }
 
 
@@ -207,6 +691,11 @@ async function loadHistory(){
     
     const historyDiv = document.getElementById("historyList");
     historyDiv.innerHTML = '<p class="loading">Memuat riwayat...</p>';
+    
+    if(!currentUser){
+        historyDiv.innerHTML = '<p class="empty">Login untuk melihat riwayat tes kamu.</p>';
+        return;
+    }
     
     try {
         
@@ -253,266 +742,7 @@ async function loadHistory(){
 
 
 // ===============================
-// LOAD STATISTICS
-// ===============================
-let scoreChart = null;
-
-async function loadStatistics(){
-    
-    try {
-        
-        const history = await getRiwayatTes(currentUser.id);
-        
-        if(history.length === 0){
-            document.getElementById("totalTests").innerText = "0";
-            document.getElementById("avgScore").innerText = "0";
-            document.getElementById("bestScore").innerText = "0";
-            document.getElementById("lastScore").innerText = "-";
-            return;
-        }
-        
-        // Calculate statistics
-        const scores = history.map(h => h.nilai);
-        const totalTests = scores.length;
-        const avgScore = Math.round(scores.reduce((a,b) => a+b, 0) / totalTests);
-        const bestScore = Math.max(...scores);
-        const lastScore = scores[0]; // Already sorted newest first
-        
-        // Update UI
-        document.getElementById("totalTests").innerText = totalTests;
-        document.getElementById("avgScore").innerText = avgScore;
-        document.getElementById("bestScore").innerText = bestScore;
-        document.getElementById("lastScore").innerText = lastScore;
-        
-        // Render chart
-        renderScoreChart(history);
-        
-    } catch(e){
-        console.error("Load statistics error:", e);
-    }
-}
-
-function renderScoreChart(history){
-    
-    const canvas = document.getElementById("scoreChart");
-    const ctx = canvas.getContext("2d");
-    
-    // Destroy previous chart if exists
-    if(scoreChart){
-        scoreChart.destroy();
-    }
-    
-    // Get last 10 tests
-    const last10 = history.slice(0, 10).reverse();
-    
-    const labels = last10.map((_, index) => `Tes ${index + 1}`);
-    const data = last10.map(h => h.nilai);
-    
-    scoreChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Nilai',
-                data: data,
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                borderWidth: 2,
-                tension: 0.3,
-                fill: true,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14
-                    },
-                    bodyFont: {
-                        size: 13
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        callback: function(value) {
-                            return value;
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(0,0,0,0.05)'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-
-// ===============================
-// START EXAM
-// ===============================
-window.startExam = function(){
-    
-    if(!currentUser){
-        alert("Anda harus login terlebih dahulu!");
-        return;
-    }
-    
-    document.getElementById("dashboard").style.display = "none";
-    document.getElementById("exam").style.display = "block";
-    
-    document.getElementById("userName").innerText = "Peserta: " + currentUser.namaLengkap;
-    
-    startBreak();
-}
-
-
-// ===============================
-// BADGE SYSTEM
-// ===============================
-const BADGES = [
-    {
-        id: 'first_test',
-        name: 'Pemula',
-        icon: '🎯',
-        description: 'Selesaikan tes pertama',
-        requirement: (stats) => stats.totalTests >= 1
-    },
-    {
-        id: 'five_tests',
-        name: 'Konsisten',
-        icon: '📚',
-        description: 'Selesaikan 5 tes',
-        requirement: (stats) => stats.totalTests >= 5
-    },
-    {
-        id: 'ten_tests',
-        name: 'Dedikasi',
-        icon: '💪',
-        description: 'Selesaikan 10 tes',
-        requirement: (stats) => stats.totalTests >= 10
-    },
-    {
-        id: 'score_50',
-        name: 'Cukup Baik',
-        icon: '⭐',
-        description: 'Raih nilai 50 atau lebih',
-        requirement: (stats) => stats.bestScore >= 50
-    },
-    {
-        id: 'score_70',
-        name: 'Bagus!',
-        icon: '🌟',
-        description: 'Raih nilai 70 atau lebih',
-        requirement: (stats) => stats.bestScore >= 70
-    },
-    {
-        id: 'score_85',
-        name: 'Luar Biasa',
-        icon: '✨',
-        description: 'Raih nilai 85 atau lebih',
-        requirement: (stats) => stats.bestScore >= 85
-    },
-    {
-        id: 'perfect',
-        name: 'Sempurna!',
-        icon: '🏆',
-        description: 'Raih nilai 100',
-        requirement: (stats) => stats.bestScore >= 100
-    },
-    {
-        id: 'avg_80',
-        name: 'Master',
-        icon: '👑',
-        description: 'Rata-rata nilai 80+',
-        requirement: (stats) => stats.avgScore >= 80
-    }
-];
-
-async function loadBadges(){
-    
-    try {
-        
-        const history = await getRiwayatTes(currentUser.id);
-        
-        const scores = history.map(h => h.nilai);
-        const stats = {
-            totalTests: scores.length,
-            avgScore: scores.length > 0 ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0,
-            bestScore: scores.length > 0 ? Math.max(...scores) : 0
-        };
-        
-        const badgesDiv = document.getElementById("badgesContent");
-        let html = '';
-        
-        BADGES.forEach(badge => {
-            
-            const earned = badge.requirement(stats);
-            const badgeClass = earned ? 'badge-earned' : 'badge-locked';
-            
-            html += `
-                <div class="badge-item ${badgeClass}">
-                    <div class="badge-icon">${badge.icon}</div>
-                    <div class="badge-name">${badge.name}</div>
-                    <div class="badge-desc">${badge.description}</div>
-                </div>
-            `;
-        });
-        
-        badgesDiv.innerHTML = html || '<p class="empty">Belum ada badge.</p>';
-        
-    } catch(e){
-        console.error("Load badges error:", e);
-    }
-}
-
-
-// ===============================
-// BACK TO DASHBOARD
-// ===============================
-window.backToDashboard = async function(){
-    
-    const confirm = window.confirm("Yakin ingin kembali? Tes akan dibatalkan.");
-    
-    if(confirm){
-        
-        // Reset exam
-        clearInterval(timer);
-        clearInterval(breakTimer);
-        
-        stage = 1;
-        scores = [];
-        count = 0;
-        correctCount = 0;
-        
-        document.getElementById("exam").style.display = "none";
-        document.getElementById("result").style.display = "none";
-        
-        await showDashboard();
-    }
-}
-
-
-// ===============================
-// KONFIG
+// EXAM CONFIGURATION
 // ===============================
 const TOTAL_STAGE = 10;
 const MAX_QUESTION = 50;
@@ -539,7 +769,7 @@ let scores = [];
 
 
 // ===============================
-// ELEMENT
+// EXAM ELEMENTS
 // ===============================
 const mappingDiv = document.getElementById('mapping');
 const questionDiv = document.getElementById('question');
@@ -551,7 +781,7 @@ const resultDiv = document.getElementById('result');
 
 
 // ===============================
-// UTIL
+// UTILITY
 // ===============================
 function shuffle(arr){
     return arr.sort(()=>Math.random()-0.5);
@@ -620,7 +850,7 @@ function createQuestion(){
 
 
 // ===============================
-// BUTTON
+// BUTTONS
 // ===============================
 function createButtons(){
 
@@ -762,7 +992,7 @@ function endStage(){
 
 
 // ===============================
-// RESULT + FIREBASE
+// SHOW RESULT
 // ===============================
 async function showResult(){
 
@@ -777,7 +1007,7 @@ async function showResult(){
     let avg = Math.round(total / TOTAL_STAGE);
 
     html += `<br><b>Nilai Akhir: ${avg}</b>`;
-    html += `<br><br><button onclick="finishExam()">Kembali ke Dashboard</button>`;
+    html += `<br><br><button onclick="finishExam()" class="btn-result">Kembali ke Home</button>`;
 
     resultDiv.style.display = "block";
     resultDiv.innerHTML = html;
@@ -803,9 +1033,9 @@ async function showResult(){
 // ===============================
 window.finishExam = async function(){
     
-    console.log("Finish exam called, returning to dashboard...");
+    console.log("Finish exam, returning to home...");
     
-    // Wait a bit to ensure Firebase data is saved
+    // Wait for Firebase
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Reset exam state
@@ -818,18 +1048,17 @@ window.finishExam = async function(){
     clearInterval(timer);
     clearInterval(breakTimer);
     
-    // Hide exam and result
-    document.getElementById("exam").style.display = "none";
-    document.getElementById("result").style.display = "none";
+    // Hide exam screen
+    document.getElementById('examScreen').classList.remove('active');
+    document.querySelector('.main-content').style.display = 'block';
     
-    // Show dashboard
-    document.getElementById("dashboard").style.display = "block";
+    // Reset result
+    document.getElementById('result').style.display = 'none';
     
-    // Reload all dashboard data
-    console.log("Reloading history, statistics, and badges...");
-    await loadHistory();
-    await loadStatistics();
-    loadBadges();
+    // Go to home page
+    showPage('home');
     
-    console.log("Dashboard loaded with updated data!");
+    alert("Tes selesai! Lihat hasil di halaman Progress atau Riwayat Tes.");
+    
+    console.log("Returned to home!");
 }

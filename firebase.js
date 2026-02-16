@@ -158,3 +158,41 @@ export async function getRiwayatTes(userId){
         throw e;
     }
 }
+
+
+// ===============================
+// GET LEADERBOARD
+// ===============================
+export async function getLeaderboard(limit = 10){
+    
+    try {
+        
+        const q = query(collection(db, "hasilTes"));
+        
+        const snapshot = await getDocs(q);
+        
+        const allScores = [];
+        
+        snapshot.forEach(doc => {
+            allScores.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        // Sort by score (highest first), then by time (newest first)
+        allScores.sort((a, b) => {
+            if(b.nilai !== a.nilai){
+                return b.nilai - a.nilai;
+            }
+            return b.waktu.seconds - a.waktu.seconds;
+        });
+        
+        // Return top N results
+        return allScores.slice(0, limit);
+        
+    } catch(e){
+        console.error("Get leaderboard error:", e);
+        throw e;
+    }
+}
