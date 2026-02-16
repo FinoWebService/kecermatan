@@ -331,8 +331,8 @@ function updateUILoggedIn(){
 }
 
 function updateUIGuest(){
-    document.getElementById('homeUserName').innerText = '(Nama User)';
-    document.getElementById('topbarUserName').innerText = '(Nama User)';
+    document.getElementById('homeUserName').innerText = 'Guest';
+    document.getElementById('topbarUserName').innerText = 'Guest';
     
     // Update sidebar footer
     document.getElementById('sidebarUserInfo').innerHTML = `
