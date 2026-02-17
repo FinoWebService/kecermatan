@@ -363,6 +363,9 @@ function showLogoutConfirm(){
     }
 }
 
+// Make showLogoutConfirm globally accessible
+window.showLogoutConfirm = showLogoutConfirm;
+
 
 // ===============================
 // UPDATE UI

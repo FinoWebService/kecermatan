@@ -3,19 +3,15 @@
 // Must be loaded AFTER script.js
 // ===============================
 
-console.log("✅ Admin script loaded");
-
 // Initialize admin features after DOM loaded
 window.addEventListener('DOMContentLoaded', function() {
-    setTimeout(initAdminFeatures, 100); // Small delay to ensure script.js is fully loaded
+    setTimeout(initAdminFeatures, 100);
 });
 
 function initAdminFeatures() {
-    console.log("🔧 Initializing admin features...");
-    
     // Check if main functions are available
     if(!window.currentUser && !localStorage.getItem('currentUser')) {
-        console.log("No user session found");
+        // No user session
     }
     
     // Override user circle click
@@ -34,7 +30,6 @@ function initAdminFeatures() {
                 }
             }
         });
-        console.log("✅ User circle override successful");
     }
     
     setupAdminEventListeners();
@@ -95,12 +90,12 @@ function setupAdminEventListeners() {
             alert("Anda tidak memiliki permission!");
             return;
         }
-        window.navigateTo('manage-users');
+        window.navigateTo('manageUsers');
         loadManageUsers();
     });
     
     document.getElementById('btnManageAdmins')?.addEventListener('click', () => {
-        window.navigateTo('manage-admins');
+        window.navigateTo('manageAdmins');
         loadManageAdmins();
     });
     
@@ -109,18 +104,16 @@ function setupAdminEventListeners() {
             alert("Anda tidak memiliki permission!");
             return;
         }
-        window.navigateTo('view-all-tests');
+        window.navigateTo('viewAllTests');
         loadAllTests();
     });
     
-    console.log("✅ All admin event listeners attached");
+    
 }
 
 async function handleAdminLogin() {
     const username = document.getElementById('adminLoginUsername').value.trim();
     const password = document.getElementById('adminLoginPassword').value;
-    
-    console.log("🔐 Admin login attempt:", username);
     
     if(!username || !password){
         alert("Username dan password harus diisi!");
@@ -128,33 +121,26 @@ async function handleAdminLogin() {
     }
     
     try {
-        console.log("🔐 Attempting admin login...");
         const result = await window.loginAdmin(username, password);
-        
-        console.log("🔐 Login result:", result);
         
         if(result.success){
             window.currentUser = result.admin;
             localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
             
-            console.log("✅ Admin logged in:", window.currentUser);
-            
             document.getElementById('adminLoginUsername').value = "";
             document.getElementById('adminLoginPassword').value = "";
             document.getElementById('adminLoginModal').classList.remove('active');
             
-            console.log("🔄 Navigating to admin-dashboard...");
-            window.navigateTo('admin-dashboard');
+            alert(`Selamat datang, Admin ${window.currentUser.username}!`);
             
-            console.log("📊 Loading admin dashboard...");
+            window.navigateTo('adminDashboard');
             loadAdminDashboard();
             
-            alert(`Selamat datang, Admin ${window.currentUser.username}!`);
         } else {
             alert(result.message);
         }
     } catch(e){
-        console.error("❌ Admin login error:", e);
+        console.error("Admin login error:", e);
         alert("Terjadi kesalahan: " + e.message);
     }
 }
@@ -208,7 +194,7 @@ async function handleAcceptInvitation() {
             localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
             
             document.getElementById('adminInvitationModal').classList.remove('active');
-            window.navigateTo('admin-dashboard');
+            window.navigateTo('adminDashboard');
             loadAdminDashboard();
             
             alert("Akun admin berhasil dibuat!");
@@ -288,11 +274,7 @@ function handleShareWhatsApp() {
 }
 
 async function loadAdminDashboard(){
-    console.log("📊 loadAdminDashboard called");
-    console.log("👤 Current user:", window.currentUser);
-    
     if(!window.currentUser || window.currentUser.role !== 'admin'){
-        console.error("❌ Not admin, redirecting to home");
         window.navigateTo('home');
         return;
     }
@@ -300,18 +282,12 @@ async function loadAdminDashboard(){
     const displayNameEl = document.getElementById('adminDisplayName');
     if(displayNameEl) {
         displayNameEl.innerText = window.currentUser.username;
-        console.log("✅ Display name set to:", window.currentUser.username);
-    } else {
-        console.error("❌ adminDisplayName element not found!");
     }
     
     try {
-        console.log("📡 Fetching admin data...");
         const users = await window.getAllUsers();
         const tests = await window.getAllTestResults();
         const admins = await window.getAllAdmins();
-        
-        console.log("📊 Data fetched:", {users: users.length, tests: tests.length, admins: admins.length});
         
         document.getElementById('statTotalUsers').innerText = users.length;
         document.getElementById('statTotalTests').innerText = tests.length;
@@ -321,10 +297,8 @@ async function loadAdminDashboard(){
             const avgScore = Math.round(tests.reduce((s, t) => s + t.nilai, 0) / tests.length);
             document.getElementById('statAvgScore').innerText = avgScore;
         }
-        
-        console.log("✅ Dashboard loaded successfully");
     } catch(e){
-        console.error("❌ Dashboard error:", e);
+        console.error("Dashboard error:", e);
     }
 }
 
