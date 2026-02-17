@@ -1,20 +1,12 @@
 // ===============================
-// ADMIN SCRIPT - Standalone Version
-// Must be loaded AFTER script.js
+// ADMIN SCRIPT - OPTIMIZED & BUG-FIXED
 // ===============================
 
-// Initialize admin features after DOM loaded
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(initAdminFeatures, 100);
 });
 
 function initAdminFeatures() {
-    // Check if main functions are available
-    if(!window.currentUser && !localStorage.getItem('currentUser')) {
-        // No user session
-    }
-    
-    // Override user circle click
     const userCircle = document.getElementById('userCircle');
     if(userCircle) {
         const newUserCircle = userCircle.cloneNode(true);
@@ -24,10 +16,7 @@ function initAdminFeatures() {
             if(window.currentUser){
                 window.showLogoutConfirm();
             } else {
-                const loginSelectionModal = document.getElementById('loginSelectionModal');
-                if(loginSelectionModal) {
-                    loginSelectionModal.classList.add('active');
-                }
+                document.getElementById('loginSelectionModal')?.classList.add('active');
             }
         });
     }
@@ -36,32 +25,27 @@ function initAdminFeatures() {
 }
 
 function setupAdminEventListeners() {
-    // Close login selection
+    // Login selection
     document.getElementById('closeLoginSelection')?.addEventListener('click', () => {
         document.getElementById('loginSelectionModal').classList.remove('active');
     });
     
-    // Select user login
     document.getElementById('btnSelectUserLogin')?.addEventListener('click', () => {
         document.getElementById('loginSelectionModal').classList.remove('active');
         document.getElementById('loginModal').classList.add('active');
     });
     
-    // Select admin login
     document.getElementById('btnSelectAdminLogin')?.addEventListener('click', () => {
         document.getElementById('loginSelectionModal').classList.remove('active');
         document.getElementById('adminLoginModal').classList.add('active');
     });
     
-    // Close admin login
+    // Admin login/invitation
     document.getElementById('closeAdminLogin')?.addEventListener('click', () => {
         document.getElementById('adminLoginModal').classList.remove('active');
     });
     
-    // Admin login
     document.getElementById('btnAdminLogin')?.addEventListener('click', handleAdminLogin);
-    
-    // Admin invitation
     document.getElementById('linkAdminInvitation')?.addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('adminLoginModal').classList.remove('active');
@@ -107,8 +91,6 @@ function setupAdminEventListeners() {
         window.navigateTo('viewAllTests');
         loadAllTests();
     });
-    
-    
 }
 
 async function handleAdminLogin() {
@@ -124,18 +106,45 @@ async function handleAdminLogin() {
         const result = await window.loginAdmin(username, password);
         
         if(result.success){
+            // Set current user
             window.currentUser = result.admin;
             localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
             
+            // ✅ FIX: Update ALL UI elements immediately
+            document.getElementById('homeUserName').innerText = window.currentUser.username;
+            document.getElementById('topbarUserName').innerText = window.currentUser.username;
+            
+            // Update sidebar
+            document.getElementById('sidebarUserInfo').innerHTML = `
+                <div class="sidebar-user-name">${window.currentUser.username}</div>
+                <button class="btn-sidebar-logout" onclick="window.showLogoutConfirm()">
+                    Logout
+                </button>
+            `;
+            
+            // Show admin menu items
+            document.querySelectorAll('.admin-only').forEach(el => {
+                if(el.classList.contains('sidebar-divider')){
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'flex';
+                }
+            });
+            
+            // Clear form
             document.getElementById('adminLoginUsername').value = "";
             document.getElementById('adminLoginPassword').value = "";
+            
+            // Close modal
             document.getElementById('adminLoginModal').classList.remove('active');
             
-            alert(`Selamat datang, Admin ${window.currentUser.username}!`);
-            
+            // Navigate to dashboard
             window.navigateTo('adminDashboard');
-            loadAdminDashboard();
             
+            // Load dashboard data
+            await loadAdminDashboard();
+            
+            console.log("✅ Admin login successful!");
         } else {
             alert(result.message);
         }
@@ -195,7 +204,7 @@ async function handleAcceptInvitation() {
             
             document.getElementById('adminInvitationModal').classList.remove('active');
             window.navigateTo('adminDashboard');
-            loadAdminDashboard();
+            await loadAdminDashboard();
             
             alert("Akun admin berhasil dibuat!");
         } else {
@@ -274,7 +283,10 @@ function handleShareWhatsApp() {
 }
 
 async function loadAdminDashboard(){
+    console.log("📊 Loading admin dashboard...");
+    
     if(!window.currentUser || window.currentUser.role !== 'admin'){
+        console.error("Not admin, redirecting...");
         window.navigateTo('home');
         return;
     }
@@ -285,9 +297,12 @@ async function loadAdminDashboard(){
     }
     
     try {
+        console.log("Fetching data...");
         const users = await window.getAllUsers();
         const tests = await window.getAllTestResults();
         const admins = await window.getAllAdmins();
+        
+        console.log(`✅ Data loaded: ${users.length} users, ${tests.length} tests, ${admins.length} admins`);
         
         document.getElementById('statTotalUsers').innerText = users.length;
         document.getElementById('statTotalTests').innerText = tests.length;
@@ -299,6 +314,7 @@ async function loadAdminDashboard(){
         }
     } catch(e){
         console.error("Dashboard error:", e);
+        alert("Gagal memuat data dashboard: " + e.message);
     }
 }
 
@@ -400,24 +416,24 @@ window.deleteTestConfirm = function(testId, username){
     }
 }
 
-// Auto-redirect admin to dashboard on page load
+// ✅ FIX: Better auto-redirect with session check
 window.addEventListener('load', () => {
     setTimeout(() => {
         const savedUser = localStorage.getItem('currentUser');
         if(savedUser){
             try {
                 const user = JSON.parse(savedUser);
-                // Only auto-redirect if admin and currently on home page
                 if(user.role === 'admin'){
                     const currentPage = document.querySelector('.page-content.active');
                     if(currentPage && currentPage.id === 'homePage'){
+                        console.log("🔄 Auto-redirecting admin to dashboard...");
                         window.navigateTo('adminDashboard');
                         loadAdminDashboard();
                     }
                 }
             } catch(e){
-                // Ignore
+                console.error("Session error:", e);
             }
         }
-    }, 500);
+    }, 300);
 });
