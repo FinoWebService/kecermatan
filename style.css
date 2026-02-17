@@ -356,6 +356,7 @@ a:active {
 }
 
 /* Admin pages - full viewport with proper spacing */
+/* Admin pages - proper positioning from top */
 #adminDashboardPage,
 #manageUsersPage,
 #manageAdminsPage,
@@ -363,6 +364,14 @@ a:active {
     padding: 20px 40px 40px 40px !important;
     background: #f5f5f5 !important;
     min-height: calc(100vh - 70px) !important;
+    display: block !important; /* Force display */
+}
+
+#adminDashboardPage.active,
+#manageUsersPage.active,
+#manageAdminsPage.active,
+#viewAllTestsPage.active {
+    display: block !important;
 }
 
 /* Remove default page-content padding for admin pages */

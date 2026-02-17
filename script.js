@@ -73,20 +73,42 @@ const btnExitExam = document.getElementById('btnExitExam');
 // SESSION CHECK ON LOAD
 // ===============================
 window.addEventListener('DOMContentLoaded', function(){
-    
-    console.log("Checking session...");
+    console.log("🔍 Checking session...");
     
     const savedUser = localStorage.getItem('currentUser');
     
     if(savedUser){
         try {
-            currentUser = JSON.parse(savedUser);
-            console.log("Session found:", currentUser.username);
-            updateUILoggedIn();
+            const userData = JSON.parse(savedUser);
+            
+            // ✅ FIX: Validate session data
+            if(userData && userData.username){
+                currentUser = userData;
+                console.log("✅ Session restored:", currentUser.username, "Role:", currentUser.role || 'user');
+                
+                // Update UI for logged in user
+                updateUILoggedIn();
+                
+                // ✅ FIX: Auto-redirect admin to dashboard
+                if(currentUser.role === 'admin'){
+                    setTimeout(() => {
+                        const homePage = document.querySelector('#homePage.active');
+                        if(homePage){
+                            console.log("🔄 Redirecting admin to dashboard...");
+                            navigateTo('adminDashboard');
+                        }
+                    }, 300);
+                }
+            } else {
+                throw new Error("Invalid user data");
+            }
         } catch(e){
-            console.error("Invalid session:", e);
+            console.error("❌ Invalid session:", e);
             localStorage.removeItem('currentUser');
+            currentUser = null;
         }
+    } else {
+        console.log("ℹ️ No session found (Guest)");
     }
     
     // Check if there's an ongoing exam
@@ -306,7 +328,6 @@ btnRegister.addEventListener('click', async () => {
 // LOGIN
 // ===============================
 btnLogin.addEventListener('click', async () => {
-    
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     
@@ -320,28 +341,25 @@ btnLogin.addEventListener('click', async () => {
         
         if(result.success){
             currentUser = result.user;
-            
-            // Save session
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             
-            // Clear form
             document.getElementById('loginUsername').value = "";
             document.getElementById('loginPassword').value = "";
-            
-            // Close modal
             loginModal.classList.remove('active');
             
-            // Update UI
             updateUILoggedIn();
             
-            alert(`Selamat datang, ${currentUser.username}!`);
+            // ✅ FIX: Silent success, no alert
+            console.log("✅ User login successful!");
         } else {
             alert(result.message);
         }
-        
     } catch(e){
         console.error("Login error:", e);
-        alert("Terjadi kesalahan saat login!");
+        // ✅ FIX: Only alert on actual error
+        if(e.message) {
+            alert("Terjadi kesalahan: " + e.message);
+        }
     }
 });
 
@@ -988,3 +1006,111 @@ function startTimer(){
         }
     }, 1000);
 }
+
+// ===============================
+// BREAK & EXAM CONTINUATION
+// ===============================
+function startBreak(){
+    const isFirstStage = (stage === 1);
+    const breakTime = isFirstStage ? PREP_FIRST : PREP_NEXT;
+    let breakLeft = breakTime;
+    
+    document.getElementById('stageInfo').innerText = `Persiapan Kolom ${stage}`;
+    document.getElementById('mapping').innerHTML = '';
+    document.getElementById('question').innerHTML = '';
+    document.getElementById('buttons').innerHTML = '';
+    document.getElementById('questionCount').innerText = '0';
+    
+    const breakMsg = document.createElement('div');
+    breakMsg.style.cssText = 'text-align:center; padding:40px; font-size:18px; color:#666;';
+    breakMsg.innerHTML = `<p>Bersiap untuk Kolom ${stage}</p><p style="font-size:32px; font-weight:700; color:#1a6b6b; margin-top:20px;">${breakLeft}</p>`;
+    document.getElementById('question').appendChild(breakMsg);
+    
+    clearInterval(breakTimer);
+    breakTimer = setInterval(() => {
+        breakLeft--;
+        breakMsg.querySelector('p:last-child').innerText = breakLeft;
+        
+        if(breakLeft <= 0){
+            clearInterval(breakTimer);
+            startStage();
+        }
+    }, 1000);
+}
+
+function startStage(){
+    count = 0;
+    correctCount = 0;
+    timeLeft = STAGE_TIME;
+    
+    document.getElementById('stageInfo').innerText = `Kolom ${stage}`;
+    document.getElementById('questionCount').innerText = '0';
+    
+    createMapping();
+    createQuestion();
+    createButtons();
+    startTimer();
+    
+    // Save state when stage starts
+    saveExamState();
+}
+
+function endStage(){
+    clearInterval(timer);
+    
+    const stageScore = Math.round((correctCount / MAX_QUESTION) * 100);
+    scores.push(stageScore);
+    
+    if(stage >= TOTAL_STAGE){
+        finishExam();
+        return;
+    }
+    
+    stage++;
+    startBreak();
+}
+
+async function finishExam(){
+    clearInterval(timer);
+    clearInterval(breakTimer);
+    
+    const totalScore = Math.round(scores.reduce((a,b) => a+b, 0) / scores.length);
+    
+    document.getElementById('resultBox').style.display = 'block';
+    document.getElementById('resultBox').innerHTML = `
+        <h2 style="color:#1a6b6b;">Tes Selesai!</h2>
+        <p style="font-size:48px; font-weight:700; color:#1a6b6b; margin:20px 0;">${totalScore}</p>
+        <p style="font-size:18px; color:#666;">Nilai Akhir</p>
+        <button onclick="closeExam()" style="margin-top:20px; padding:15px 40px; background:#1a6b6b; color:white; border:none; border-radius:8px; font-size:16px; font-weight:700; cursor:pointer;">
+            Lihat Hasil Detail
+        </button>
+    `;
+    
+    if(currentUser && currentUser.id){
+        try {
+            await simpanNilai(currentUser.id, currentUser.username, totalScore);
+            console.log("Score saved successfully!");
+        } catch(e){
+            console.error("Save score error:", e);
+        }
+    }
+    
+    // Clear saved exam state
+    clearExamState();
+}
+
+function closeExam(){
+    examScreen.classList.remove('active');
+    document.getElementById('resultBox').style.display = 'none';
+    
+    stage = 1;
+    scores = [];
+    count = 0;
+    correctCount = 0;
+    
+    navigateTo('progress');
+    loadProgressData();
+}
+
+// Make closeExam globally accessible
+window.closeExam = closeExam;

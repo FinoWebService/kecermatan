@@ -122,14 +122,8 @@ async function handleAdminLogin() {
                 </button>
             `;
             
-            // Show admin menu items
-            document.querySelectorAll('.admin-only').forEach(el => {
-                if(el.classList.contains('sidebar-divider')){
-                    el.style.display = 'block';
-                } else {
-                    el.style.display = 'flex';
-                }
-            });
+            // ✅ FIX: Show admin menu AND attach listeners
+            showAdminMenu();
             
             // Clear form
             document.getElementById('adminLoginUsername').value = "";
@@ -414,6 +408,71 @@ window.deleteTestConfirm = function(testId, username){
             loadAllTests();
         });
     }
+}
+
+// ✅ FIX: Ensure admin menu items have proper event listeners
+function attachAdminMenuListeners() {
+    console.log("📎 Attaching admin menu listeners...");
+    
+    // Find ALL admin menu items
+    const adminMenuItems = document.querySelectorAll('.menu-item.admin-only');
+    
+    adminMenuItems.forEach(item => {
+        // Clone to remove old listeners
+        const newItem = item.cloneNode(true);
+        item.parentNode.replaceChild(newItem, item);
+        
+        // Add new listener
+        newItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = newItem.dataset.page;
+            console.log("🖱️ Admin menu clicked:", page);
+            
+            if(page === 'adminDashboard'){
+                window.navigateTo('adminDashboard');
+                loadAdminDashboard();
+            } else if(page === 'manageUsers'){
+                if(!window.currentUser?.permissions?.manageUsers){
+                    alert("Tidak ada permission!");
+                    return;
+                }
+                window.navigateTo('manageUsers');
+                loadManageUsers();
+            } else if(page === 'manageAdmins'){
+                window.navigateTo('manageAdmins');
+                loadManageAdmins();
+            } else if(page === 'viewAllTests'){
+                if(!window.currentUser?.permissions?.viewAnalytics){
+                    alert("Tidak ada permission!");
+                    return;
+                }
+                window.navigateTo('viewAllTests');
+                loadAllTests();
+            }
+            
+            // Close sidebar on mobile
+            if(window.innerWidth <= 768){
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('sidebarOverlay').classList.remove('active');
+            }
+        });
+    });
+    
+    console.log("✅ Admin menu listeners attached:", adminMenuItems.length, "items");
+}
+
+// Call this after showing admin menu
+function showAdminMenu() {
+    document.querySelectorAll('.admin-only').forEach(el => {
+        if(el.classList.contains('sidebar-divider')){
+            el.style.display = 'block';
+        } else {
+            el.style.display = 'flex';
+        }
+    });
+    
+    // ✅ FIX: Attach listeners after showing
+    attachAdminMenuListeners();
 }
 
 // ✅ FIX: Better auto-redirect with session check
