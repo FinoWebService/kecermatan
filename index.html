@@ -55,7 +55,26 @@
          <span class="menu-label">RIWAYAT TES</span>
       </a>
       
-      
+      <!-- ✅ ADMIN ONLY MENU ITEMS (SINGLE SET - NO DUPLICATES) -->
+      <div class="sidebar-divider admin-only" style="display:none;">
+         <span>ADMIN PANEL</span>
+      </div>
+      <a href="#" class="menu-item admin-only" data-page="adminDashboard" style="display:none;">
+         <span class="menu-icon">👨‍💼</span>
+         <span class="menu-label">DASHBOARD</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="manageUsers" style="display:none;">
+         <span class="menu-icon">👥</span>
+         <span class="menu-label">MANAGE USERS</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="manageAdmins" style="display:none;">
+         <span class="menu-icon">🔐</span>
+         <span class="menu-label">MANAGE ADMINS</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="viewAllTests" style="display:none;">
+         <span class="menu-icon">📊</span>
+         <span class="menu-label">ALL TEST RESULTS</span>
+      </a>
    </nav>
    
    <div class="sidebar-footer">
@@ -139,7 +158,7 @@
       </button>
       
       <div class="content-box">
-         <h2> Tes Kecermatan</h2>
+         <h2>🎯 Tes Kecermatan</h2>
          <p class="test-desc">Uji fokus dan kecepatan berpikir kamu dengan tes kecermatan ini!</p>
          
          <div class="test-info">
@@ -167,14 +186,14 @@
             <p>2. Kemudian, <strong>4 simbol</strong> akan ditampilkan (1 simbol hilang)</p>
             <p>3. Tugas kamu: <strong>Tebak huruf</strong> yang sesuai dengan simbol yang hilang</p>
             <p>4. Jawab <strong>sebanyak mungkin</strong> dalam waktu 60 detik per kolom</p>
-            <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! </p>
+            <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! 🏆</p>
          </div>
          
          <button class="btn-primary" id="btnStartFromPage">
             - Mulai Tes Sekarang -
          </button>
          
-         <p class="test-note"> <em>Pastikan kamu sudah siap dan fokus sebelum memulai tes!</em></p>
+         <p class="test-note">⚠️ <em>Pastikan kamu sudah siap dan fokus sebelum memulai tes!</em></p>
       </div>
    </div>
    
@@ -186,7 +205,7 @@
       </button>
       
       <div class="content-box">
-         <h2>Progress Kamu</h2>
+         <h2>📊 Progress Kamu</h2>
          
          <div class="stats-row">
             <div class="stat-box">
@@ -227,7 +246,7 @@
       </button>
       
       <div class="content-box">
-         <h2> Leaderboard</h2>
+         <h2>🏆 Leaderboard</h2>
          <div id="leaderboardList"></div>
       </div>
    </div>
@@ -240,7 +259,7 @@
       </button>
       
       <div class="content-box">
-         <h2> Riwayat Tes</h2>
+         <h2>📜 Riwayat Tes</h2>
          <div id="historyList"></div>
       </div>
    </div>
@@ -287,7 +306,7 @@
          <button class="btn-exit-top" id="btnExitExam">← Keluar</button>
          <div class="timer-box">
             <span class="timer-label">Sisa Waktu</span>
-            <span class="timer-value" id="examTimer">00:00:59</span>
+            <span class="timer-value" id="examTimer">00:01:00</span>
          </div>
       </div>
    </div>
@@ -310,7 +329,6 @@
 </div>
 
 
-<script type="module" src="script.js"></script>
 <!-- LOGIN SELECTION MODAL -->
 <div class="modal-overlay" id="loginSelectionModal">
    <div class="modal-box">
@@ -431,6 +449,7 @@
       </div>
    </div>
 </div>
+
 <!-- ADMIN DASHBOARD PAGE -->
 <div class="page-content" id="adminDashboardPage">
    <div class="admin-header">
