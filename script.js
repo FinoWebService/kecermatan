@@ -144,13 +144,16 @@ btnSidebarLogin.addEventListener('click', () => {
 // ===============================
 function navigateTo(pageName){
     
-    // Hide all pages
-    pages.forEach(page => page.classList.remove('active'));
+    // Hide all pages (include admin pages)
+    const allPages = document.querySelectorAll('.page-content');
+    allPages.forEach(page => page.classList.remove('active'));
     
     // Show selected page
     const targetPage = document.getElementById(pageName + 'Page');
     if(targetPage){
         targetPage.classList.add('active');
+    } else {
+        console.error(`Page not found: ${pageName}Page`);
     }
     
     // Update menu active state

@@ -120,6 +120,8 @@ async function handleAdminLogin() {
     const username = document.getElementById('adminLoginUsername').value.trim();
     const password = document.getElementById('adminLoginPassword').value;
     
+    console.log("🔐 Admin login attempt:", username);
+    
     if(!username || !password){
         alert("Username dan password harus diisi!");
         return;
@@ -129,15 +131,22 @@ async function handleAdminLogin() {
         console.log("🔐 Attempting admin login...");
         const result = await window.loginAdmin(username, password);
         
+        console.log("🔐 Login result:", result);
+        
         if(result.success){
             window.currentUser = result.admin;
             localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+            
+            console.log("✅ Admin logged in:", window.currentUser);
             
             document.getElementById('adminLoginUsername').value = "";
             document.getElementById('adminLoginPassword').value = "";
             document.getElementById('adminLoginModal').classList.remove('active');
             
+            console.log("🔄 Navigating to admin-dashboard...");
             window.navigateTo('admin-dashboard');
+            
+            console.log("📊 Loading admin dashboard...");
             loadAdminDashboard();
             
             alert(`Selamat datang, Admin ${window.currentUser.username}!`);
@@ -279,17 +288,30 @@ function handleShareWhatsApp() {
 }
 
 async function loadAdminDashboard(){
+    console.log("📊 loadAdminDashboard called");
+    console.log("👤 Current user:", window.currentUser);
+    
     if(!window.currentUser || window.currentUser.role !== 'admin'){
+        console.error("❌ Not admin, redirecting to home");
         window.navigateTo('home');
         return;
     }
     
-    document.getElementById('adminDisplayName').innerText = window.currentUser.username;
+    const displayNameEl = document.getElementById('adminDisplayName');
+    if(displayNameEl) {
+        displayNameEl.innerText = window.currentUser.username;
+        console.log("✅ Display name set to:", window.currentUser.username);
+    } else {
+        console.error("❌ adminDisplayName element not found!");
+    }
     
     try {
+        console.log("📡 Fetching admin data...");
         const users = await window.getAllUsers();
         const tests = await window.getAllTestResults();
         const admins = await window.getAllAdmins();
+        
+        console.log("📊 Data fetched:", {users: users.length, tests: tests.length, admins: admins.length});
         
         document.getElementById('statTotalUsers').innerText = users.length;
         document.getElementById('statTotalTests').innerText = tests.length;
@@ -299,8 +321,10 @@ async function loadAdminDashboard(){
             const avgScore = Math.round(tests.reduce((s, t) => s + t.nilai, 0) / tests.length);
             document.getElementById('statAvgScore').innerText = avgScore;
         }
+        
+        console.log("✅ Dashboard loaded successfully");
     } catch(e){
-        console.error("Dashboard error:", e);
+        console.error("❌ Dashboard error:", e);
     }
 }
 
