@@ -423,6 +423,11 @@ function updateUIGuest(){
         </button>
     `;
     
+    // Hide admin menu items
+    document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = 'none';
+    });
+    
     // Re-attach event listener
     const newBtn = document.getElementById('btnSidebarLogin');
     newBtn.addEventListener('click', () => {

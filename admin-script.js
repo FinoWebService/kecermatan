@@ -399,3 +399,25 @@ window.deleteTestConfirm = function(testId, username){
         });
     }
 }
+
+// Auto-redirect admin to dashboard on page load
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const savedUser = localStorage.getItem('currentUser');
+        if(savedUser){
+            try {
+                const user = JSON.parse(savedUser);
+                // Only auto-redirect if admin and currently on home page
+                if(user.role === 'admin'){
+                    const currentPage = document.querySelector('.page-content.active');
+                    if(currentPage && currentPage.id === 'homePage'){
+                        window.navigateTo('adminDashboard');
+                        loadAdminDashboard();
+                    }
+                }
+            } catch(e){
+                // Ignore
+            }
+        }
+    }, 500);
+});
