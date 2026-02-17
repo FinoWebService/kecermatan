@@ -54,6 +54,27 @@
 </svg></span>
          <span class="menu-label">RIWAYAT TES</span>
       </a>
+      
+      <!-- ADMIN ONLY MENU ITEMS -->
+      <div class="sidebar-divider admin-only" style="display:none;">
+         <span>ADMIN MENU</span>
+      </div>
+      <a href="#" class="menu-item admin-only" data-page="admin-dashboard" style="display:none;">
+         <span class="menu-icon">👨‍💼</span>
+         <span class="menu-label">ADMIN DASHBOARD</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="manage-users" style="display:none;">
+         <span class="menu-icon">👥</span>
+         <span class="menu-label">MANAGE USERS</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="manage-admins" style="display:none;">
+         <span class="menu-icon">👔</span>
+         <span class="menu-label">MANAGE ADMINS</span>
+      </a>
+      <a href="#" class="menu-item admin-only" data-page="view-all-tests" style="display:none;">
+         <span class="menu-icon">📊</span>
+         <span class="menu-label">ALL TEST RESULTS</span>
+      </a>
    </nav>
    
    <div class="sidebar-footer">
@@ -250,12 +271,12 @@
 <div class="modal-overlay" id="loginModal">
    <div class="modal-box">
       <button class="modal-close" id="closeLogin">&times;</button>
-      <h2>Login Akun CERMATRIX</h2>
+      <h2>Login</h2>
       <p>Masuk untuk menyimpan progress kamu</p>
       <input type="text" id="loginUsername" placeholder="Username" class="input-box">
       <input type="password" id="loginPassword" placeholder="Password" class="input-box">
       <button class="btn-modal" id="btnLogin">LOGIN</button>
-      <p class="modal-link">Belum punya akun CERMATRIX? <a href="#" id="linkRegister">Daftar di sini</a></p>
+      <p class="modal-link">Belum punya akun? <a href="#" id="linkRegister">Daftar di sini</a></p>
    </div>
 </div>
 
@@ -270,7 +291,7 @@
       <input type="password" id="regPassword" placeholder="Password (min 6 karakter)" class="input-box">
       <input type="password" id="regPasswordConfirm" placeholder="Konfirmasi Password" class="input-box">
       <button class="btn-modal" id="btnRegister">DAFTAR</button>
-      <p class="modal-link">Sudah punya akun CERMATRIX? <a href="#" id="linkLogin">Login di sini</a></p>
+      <p class="modal-link">Sudah punya akun? <a href="#" id="linkLogin">Login di sini</a></p>
    </div>
 </div>
 
@@ -318,19 +339,15 @@
       
       <div class="login-options">
          <button class="btn-login-option" id="btnSelectUserLogin">
-            <div class="option-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-  <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-</svg></div>
+            <div class="option-icon">👤</div>
             <div class="option-title">Login sebagai User</div>
-            <div class="option-desc">Untuk Mengerjakan Tes</div>
+            <div class="option-desc">Untuk mengerjakan tes kecermatan</div>
          </button>
          
          <button class="btn-login-option" id="btnSelectAdminLogin">
-            <div class="option-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-</svg></div>
+            <div class="option-icon">👨‍💼</div>
             <div class="option-title">Login sebagai Admin</div>
-            <div class="option-desc"></div>
+            <div class="option-desc">Untuk mengelola sistem</div>
          </button>
       </div>
    </div>
