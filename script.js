@@ -190,13 +190,8 @@ quickBtns.forEach(btn => {
 // ===============================
 // MODAL HANDLING
 // ===============================
-userCircle.addEventListener('click', () => {
-    if(currentUser){
-        showLogoutConfirm();
-    } else {
-        loginModal.classList.add('active');
-    }
-});
+// User circle click will be handled by admin-script.js
+// Do not add click handler here
 
 document.getElementById('closeLogin').addEventListener('click', () => {
     loginModal.classList.remove('active');

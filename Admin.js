@@ -4,24 +4,48 @@
 // This should be loaded AFTER main script.js
 // ===============================
 
-// Get modal elements
-const loginSelectionModal = document.getElementById('loginSelectionModal');
-const adminLoginModal = document.getElementById('adminLoginModal');
-const adminInvitationModal = document.getElementById('adminInvitationModal');
-const inviteAdminModal = document.getElementById('inviteAdminModal');
-
-// Override user circle click to show selection modal
-document.getElementById('userCircle').addEventListener('click', (e) => {
-    e.stopPropagation();
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Admin script loaded");
     
-    if(currentUser){
-        // If logged in, show logout
-        showLogoutConfirm();
-    } else {
-        // Show login selection
-        loginSelectionModal.classList.add('active');
+    // Get modal elements
+    const loginSelectionModal = document.getElementById('loginSelectionModal');
+    const adminLoginModal = document.getElementById('adminLoginModal');
+    const adminInvitationModal = document.getElementById('adminInvitationModal');
+    const inviteAdminModal = document.getElementById('inviteAdminModal');
+    const userCircle = document.getElementById('userCircle');
+    
+    // Override user circle click to show selection modal
+    if(userCircle) {
+        // Remove all existing click handlers by cloning
+        const newUserCircle = userCircle.cloneNode(true);
+        userCircle.parentNode.replaceChild(newUserCircle, userCircle);
+        
+        // Add new click handler
+        newUserCircle.addEventListener('click', () => {
+            if(window.currentUser){
+                // If logged in, show logout
+                showLogoutConfirm();
+            } else {
+                // Show login selection
+                if(loginSelectionModal) {
+                    loginSelectionModal.classList.add('active');
+                } else {
+                    console.error("Login selection modal not found!");
+                }
+            }
+        });
     }
+    
+    // Initialize all event listeners
+    initAdminEventListeners();
 });
+
+function initAdminEventListeners() {
+    const loginSelectionModal = document.getElementById('loginSelectionModal');
+    const adminLoginModal = document.getElementById('adminLoginModal');
+    const adminInvitationModal = document.getElementById('adminInvitationModal');
+    const inviteAdminModal = document.getElementById('inviteAdminModal');
 
 // Close login selection modal
 document.getElementById('closeLoginSelection')?.addEventListener('click', () => {
@@ -583,3 +607,5 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+} // Close initAdminEventListeners function
