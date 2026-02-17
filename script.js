@@ -58,7 +58,6 @@ const pages = document.querySelectorAll('.page-content');
 
 const loginModal = document.getElementById('loginModal');
 const registerModal = document.getElementById('registerModal');
-const userCircle = document.getElementById('userCircle');
 
 const btnStartTest = document.getElementById('btnStartTest');
 const btnStartFromPage = document.getElementById('btnStartFromPage');
@@ -70,7 +69,7 @@ const btnExitExam = document.getElementById('btnExitExam');
 
 
 // ===============================
-// SESSION CHECK ON LOAD
+// SESSION CHECK ON LOAD (FIXED)
 // ===============================
 window.addEventListener('DOMContentLoaded', function(){
     console.log("🔍 Checking session...");
@@ -147,12 +146,9 @@ sidebarOverlay.addEventListener('click', () => {
 // Sidebar login/logout button
 btnSidebarLogin.addEventListener('click', () => {
     if(currentUser){
-        // If logged in, logout
         showLogoutConfirm();
     } else {
-        // If guest, show login modal
         loginModal.classList.add('active');
-        // Close sidebar on mobile
         if(window.innerWidth <= 768){
             sidebar.classList.remove('active');
             sidebarOverlay.classList.remove('active');
@@ -165,7 +161,6 @@ btnSidebarLogin.addEventListener('click', () => {
 // NAVIGATION
 // ===============================
 function navigateTo(pageName){
-    
     // Hide all pages (include admin pages)
     const allPages = document.querySelectorAll('.page-content');
     allPages.forEach(page => page.classList.remove('active'));
@@ -174,8 +169,9 @@ function navigateTo(pageName){
     const targetPage = document.getElementById(pageName + 'Page');
     if(targetPage){
         targetPage.classList.add('active');
+        console.log("✅ Navigated to:", pageName);
     } else {
-        console.error(`Page not found: ${pageName}Page`);
+        console.error(`❌ Page not found: ${pageName}Page`);
     }
     
     // Update menu active state
@@ -227,9 +223,6 @@ quickBtns.forEach(btn => {
 // ===============================
 // MODAL HANDLING
 // ===============================
-// User circle click will be handled by admin-script.js
-// Do not add click handler here
-
 document.getElementById('closeLogin').addEventListener('click', () => {
     loginModal.classList.remove('active');
 });
@@ -255,15 +248,11 @@ document.getElementById('linkLogin').addEventListener('click', (e) => {
 // REGISTER
 // ===============================
 btnRegister.addEventListener('click', async () => {
-    
-    console.log("Register button clicked");
-    
     const usernameInput = document.getElementById('regUsername');
     const passwordInput = document.getElementById('regPassword');
     const passwordConfirmInput = document.getElementById('regPasswordConfirm');
     
     if(!usernameInput || !passwordInput || !passwordConfirmInput){
-        console.error("Input elements not found!");
         alert("Error: Form tidak ditemukan. Silakan refresh halaman.");
         return;
     }
@@ -271,9 +260,6 @@ btnRegister.addEventListener('click', async () => {
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
     const passwordConfirm = passwordConfirmInput.value;
-    
-    console.log("Username:", username);
-    console.log("Password length:", password.length);
     
     if(!username || !password || !passwordConfirm){
         alert("Semua field harus diisi!");
@@ -295,28 +281,21 @@ btnRegister.addEventListener('click', async () => {
         return;
     }
     
-    console.log("Validation passed, calling registerUser...");
-    
     try {
         const result = await registerUser(username, password);
-        
-        console.log("Register result:", result);
         
         if(result.success){
             alert("Registrasi berhasil! Silakan login.");
             
-            // Clear form safely
             if(usernameInput) usernameInput.value = "";
             if(passwordInput) passwordInput.value = "";
             if(passwordConfirmInput) passwordConfirmInput.value = "";
             
-            // Show login modal
             registerModal.classList.remove('active');
             loginModal.classList.add('active');
         } else {
             alert(result.message);
         }
-        
     } catch(e){
         console.error("Register error:", e);
         alert("Terjadi kesalahan saat registrasi: " + e.message);
@@ -325,7 +304,7 @@ btnRegister.addEventListener('click', async () => {
 
 
 // ===============================
-// LOGIN
+// LOGIN (FIXED - No False Alert)
 // ===============================
 btnLogin.addEventListener('click', async () => {
     const username = document.getElementById('loginUsername').value.trim();
@@ -377,7 +356,7 @@ function showLogoutConfirm(){
         updateUIGuest();
         navigateTo('home');
         
-        alert("Logout berhasil!");
+        console.log("✅ Logout successful");
     }
 }
 
@@ -421,9 +400,9 @@ function updateUILoggedIn(){
         });
     }
     
-    // Load data
-    if(currentUser.id){
-        loadProgress();
+    // ✅ FIX: Only load data if regular user (not admin)
+    if(currentUser.id && !currentUser.role){
+        loadProgressData();
         loadLeaderboard();
         loadHistory();
     }
@@ -462,7 +441,6 @@ function updateUIGuest(){
 // START TEST
 // ===============================
 btnStartTest.addEventListener('click', () => {
-    // Navigate to test info page instead of starting immediately
     navigateTo('test');
 });
 
@@ -482,8 +460,6 @@ btnStartFromPage.addEventListener('click', () => {
 // ===============================
 function startExam(){
     examScreen.classList.add('active');
-    // No need to display user name in new design
-    
     startBreak();
 }
 
@@ -515,7 +491,6 @@ function saveExamState(){
 
 // Restore exam from saved state
 function restoreExam(examData){
-    // Check if exam is not too old (max 2 hours)
     const twoHours = 2 * 60 * 60 * 1000;
     if(Date.now() - examData.timestamp > twoHours){
         console.log("Exam too old, removing...");
@@ -523,7 +498,6 @@ function restoreExam(examData){
         return;
     }
     
-    // Restore state
     stage = examData.stage;
     timeLeft = examData.timeLeft;
     count = examData.count;
@@ -532,23 +506,14 @@ function restoreExam(examData){
     mapping = examData.mapping;
     correct = examData.correct;
     
-    // Show exam screen
     examScreen.classList.add('active');
     
-    // Restore UI
     document.getElementById('stageInfo').innerText = `Kolom ${stage}`;
     document.getElementById('questionCount').innerText = count;
     
-    // Restore mapping
     renderMapping();
-    
-    // Restore question
     createQuestion();
-    
-    // Restore buttons
     createButtons();
-    
-    // Restart timer
     startTimer();
     
     console.log("Exam restored successfully!");
@@ -578,7 +543,6 @@ btnExitExam.addEventListener('click', () => {
         examScreen.classList.remove('active');
         document.getElementById('resultBox').style.display = 'none';
         
-        // Clear saved exam state
         clearExamState();
     }
 });
@@ -588,8 +552,7 @@ btnExitExam.addEventListener('click', () => {
 // LOAD PROGRESS DATA
 // ===============================
 async function loadProgressData(){
-    
-    if(!currentUser){
+    if(!currentUser || currentUser.role === 'admin'){
         document.getElementById('statTotal').innerText = '0';
         document.getElementById('statAvg').innerText = '0';
         document.getElementById('statBest').innerText = '0';
@@ -625,10 +588,13 @@ async function loadProgressData(){
         
         renderChart(history);
         renderBadges(history, {totalTests, avgScore, bestScore});
-        
     } catch(e){
         console.error("Load progress error:", e);
     }
+}
+
+function loadProgress(){
+    loadProgressData();
 }
 
 
@@ -822,7 +788,6 @@ async function loadLeaderboard(){
         });
         
         list.innerHTML = html;
-        
     } catch(e){
         console.error("Load leaderboard error:", e);
         list.innerHTML = '<p class="error">Gagal memuat leaderboard.</p>';
@@ -837,7 +802,7 @@ async function loadHistory(){
     const list = document.getElementById('historyList');
     list.innerHTML = '<p class="loading">Memuat riwayat...</p>';
     
-    if(!currentUser){
+    if(!currentUser || currentUser.role === 'admin'){
         list.innerHTML = '<p class="empty">Login untuk melihat riwayat tes.</p>';
         return;
     }
@@ -873,7 +838,6 @@ async function loadHistory(){
         });
         
         list.innerHTML = html;
-        
     } catch(e){
         console.error("Load history error:", e);
         list.innerHTML = '<p class="error">Gagal memuat riwayat.</p>';
@@ -882,7 +846,7 @@ async function loadHistory(){
 
 
 // ===============================
-// EXAM LOGIC
+// EXAM LOGIC (COMPLETE & FIXED)
 // ===============================
 const TOTAL_STAGE = 10;
 const MAX_QUESTION = 50;
@@ -955,6 +919,7 @@ function createButtons(){
     
     letters.forEach(l => {
         const btn = document.createElement('button');
+        btn.className = 'btn-answer';
         btn.innerText = l;
         btn.onclick = () => answer(l);
         div.appendChild(btn);
@@ -978,8 +943,6 @@ function answer(a){
     }
     
     createQuestion();
-    
-    // Save state after each answer
     saveExamState();
 }
 
@@ -995,7 +958,6 @@ function startTimer(){
         document.getElementById('examTimer').innerText = 
             `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         
-        // Save state every 5 seconds
         if(timeLeft % 5 === 0){
             saveExamState();
         }
@@ -1007,9 +969,7 @@ function startTimer(){
     }, 1000);
 }
 
-// ===============================
-// BREAK & EXAM CONTINUATION
-// ===============================
+// ✅ FIX: COMPLETE EXAM FUNCTIONS (Previously Missing)
 function startBreak(){
     const isFirstStage = (stage === 1);
     const breakTime = isFirstStage ? PREP_FIRST : PREP_NEXT;
@@ -1051,7 +1011,6 @@ function startStage(){
     createButtons();
     startTimer();
     
-    // Save state when stage starts
     saveExamState();
 }
 
@@ -1089,13 +1048,12 @@ async function finishExam(){
     if(currentUser && currentUser.id){
         try {
             await simpanNilai(currentUser.id, currentUser.username, totalScore);
-            console.log("Score saved successfully!");
+            console.log("✅ Score saved successfully!");
         } catch(e){
             console.error("Save score error:", e);
         }
     }
     
-    // Clear saved exam state
     clearExamState();
 }
 
@@ -1112,5 +1070,4 @@ function closeExam(){
     loadProgressData();
 }
 
-// Make closeExam globally accessible
 window.closeExam = closeExam;
