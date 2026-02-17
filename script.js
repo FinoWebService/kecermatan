@@ -6,7 +6,17 @@ import {
     loginUser, 
     simpanNilai,
     getRiwayatTes,
-    getLeaderboard
+    getLeaderboard,
+    loginAdmin,
+    createAdminInvitation,
+    validateInvitationCode,
+    acceptAdminInvitation,
+    getAllAdmins,
+    getAllUsers,
+    deleteUser,
+    deleteTestResult,
+    revokeAdminAccess,
+    getAllTestResults
 } from "./firebase.js";
 
 
@@ -14,6 +24,12 @@ import {
 // GLOBAL STATE
 // ===============================
 let currentUser = null;
+
+// Make currentUser globally accessible
+Object.defineProperty(window, 'currentUser', {
+    get() { return currentUser; },
+    set(value) { currentUser = value; }
+});
 
 
 // ===============================

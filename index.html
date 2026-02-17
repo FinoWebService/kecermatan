@@ -5,6 +5,7 @@
 <title>CERMATIX - CAT Kecermatan</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin-styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -308,6 +309,229 @@
 
 
 <script type="module" src="script.js"></script>
+<!-- LOGIN SELECTION MODAL -->
+<div class="modal-overlay" id="loginSelectionModal">
+   <div class="modal-box">
+      <button class="modal-close" id="closeLoginSelection">&times;</button>
+      <h2>Pilih Jenis Login</h2>
+      <p>Silakan pilih sebagai apa Anda ingin login</p>
+      
+      <div class="login-options">
+         <button class="btn-login-option" id="btnSelectUserLogin">
+            <div class="option-icon">👤</div>
+            <div class="option-title">Login sebagai User</div>
+            <div class="option-desc">Untuk mengerjakan tes kecermatan</div>
+         </button>
+         
+         <button class="btn-login-option" id="btnSelectAdminLogin">
+            <div class="option-icon">👨‍💼</div>
+            <div class="option-title">Login sebagai Admin</div>
+            <div class="option-desc">Untuk mengelola sistem</div>
+         </button>
+      </div>
+   </div>
+</div>
 
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+   <div class="modal-box">
+      <button class="modal-close" id="closeAdminLogin">&times;</button>
+      <h2>Login Admin</h2>
+      <p>Login khusus untuk administrator</p>
+      
+      <input type="text" id="adminLoginUsername" placeholder="Admin Username" class="input-box">
+      <input type="password" id="adminLoginPassword" placeholder="Admin Password" class="input-box">
+      <button class="btn-modal" id="btnAdminLogin">LOGIN</button>
+      
+      <p class="modal-link">
+         Punya invitation code? 
+         <a href="#" id="linkAdminInvitation">Aktivasi di sini</a>
+      </p>
+   </div>
+</div>
+
+<!-- ADMIN INVITATION MODAL -->
+<div class="modal-overlay" id="adminInvitationModal">
+   <div class="modal-box">
+      <button class="modal-close" id="closeAdminInvitation">&times;</button>
+      <h2>🎉 Aktivasi Admin</h2>
+      <p>Masukkan invitation code yang Anda terima</p>
+      
+      <input type="text" id="inviteCode" placeholder="Invitation Code (8 karakter)" class="input-box" maxlength="8" style="text-transform:uppercase;">
+      <button class="btn-modal" id="btnValidateCode">Validasi Code</button>
+      
+      <div id="inviteDetails" style="display:none;">
+         <div class="invitation-info">
+            <p><strong>Username:</strong> <span id="inviteUsername">-</span></p>
+            <p><strong>Permissions:</strong> <span id="invitePermissions">-</span></p>
+         </div>
+         
+         <input type="password" id="adminRegPassword" placeholder="Buat Password (min 8 karakter)" class="input-box">
+         <input type="password" id="adminRegPasswordConfirm" placeholder="Konfirmasi Password" class="input-box">
+         <button class="btn-modal" id="btnAcceptInvitation">Aktivasi Akun Admin</button>
+      </div>
+   </div>
+</div>
+
+<!-- INVITE ADMIN MODAL -->
+<div class="modal-overlay" id="inviteAdminModal">
+   <div class="modal-box modal-box-large">
+      <button class="modal-close" id="closeInviteAdmin">&times;</button>
+      <h2>➕ Invite New Admin</h2>
+      <p>Buat invitation untuk admin baru</p>
+      
+      <input type="text" id="newAdminUsername" placeholder="Username Admin Baru (min 4 karakter)" class="input-box">
+      
+      <div class="permissions-box">
+         <h3>Set Permissions:</h3>
+         <label class="permission-item">
+            <input type="checkbox" id="permManageUsers" checked>
+            <span>Manage Users - Hapus user, view data user</span>
+         </label>
+         <label class="permission-item">
+            <input type="checkbox" id="permDeleteTests" checked>
+            <span>Delete Tests - Hapus hasil tes</span>
+         </label>
+         <label class="permission-item">
+            <input type="checkbox" id="permInviteAdmin">
+            <span>Invite Admin - Invite admin lain (powerful!)</span>
+         </label>
+         <label class="permission-item">
+            <input type="checkbox" id="permViewAnalytics" checked>
+            <span>View Analytics - Lihat statistik & dashboard</span>
+         </label>
+      </div>
+      
+      <button class="btn-modal" id="btnGenerateInvite">Generate Invitation</button>
+      
+      <div id="inviteResult" style="display:none;">
+         <div class="invite-success">
+            <h3>✅ Invitation Berhasil Dibuat!</h3>
+            <div class="invite-code-box">
+               <div class="invite-row">
+                  <span class="invite-label">Username:</span>
+                  <span class="invite-value" id="resultUsername">-</span>
+               </div>
+               <div class="invite-row">
+                  <span class="invite-label">Invitation Code:</span>
+                  <span class="invite-code" id="resultCode">-</span>
+               </div>
+               <div class="invite-row">
+                  <span class="invite-label">Berlaku sampai:</span>
+                  <span class="invite-value" id="resultExpiry">-</span>
+               </div>
+            </div>
+            <div class="invite-actions">
+               <button class="btn-copy" id="btnCopyCode">📋 Copy Code</button>
+               <button class="btn-share" id="btnShareWhatsApp">💬 Share WhatsApp</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- ADMIN DASHBOARD PAGE -->
+<div class="page-content" id="adminDashboardPage">
+   <div class="admin-header">
+      <h2>👨‍💼 Admin Dashboard</h2>
+      <p>Selamat datang, <strong id="adminDisplayName">Admin</strong></p>
+   </div>
+   
+   <!-- Stats Cards -->
+   <div class="admin-stats-grid">
+      <div class="admin-stat-card">
+         <div class="stat-icon">👥</div>
+         <div class="stat-content">
+            <div class="stat-value" id="statTotalUsers">0</div>
+            <div class="stat-label">Total Users</div>
+         </div>
+      </div>
+      <div class="admin-stat-card">
+         <div class="stat-icon">📝</div>
+         <div class="stat-content">
+            <div class="stat-value" id="statTotalTests">0</div>
+            <div class="stat-label">Total Tests</div>
+         </div>
+      </div>
+      <div class="admin-stat-card">
+         <div class="stat-icon">👨‍💼</div>
+         <div class="stat-content">
+            <div class="stat-value" id="statTotalAdmins">0</div>
+            <div class="stat-label">Total Admins</div>
+         </div>
+      </div>
+      <div class="admin-stat-card">
+         <div class="stat-icon">📊</div>
+         <div class="stat-content">
+            <div class="stat-value" id="statAvgScore">0</div>
+            <div class="stat-label">Avg Score</div>
+         </div>
+      </div>
+   </div>
+   
+   <!-- Quick Actions -->
+   <div class="admin-actions">
+      <button class="btn-admin-action" id="btnInviteAdmin">
+         <span class="action-icon">➕</span>
+         <span>Invite New Admin</span>
+      </button>
+      <button class="btn-admin-action" id="btnManageUsers">
+         <span class="action-icon">👥</span>
+         <span>Manage Users</span>
+      </button>
+      <button class="btn-admin-action" id="btnManageAdmins">
+         <span class="action-icon">👨‍💼</span>
+         <span>Manage Admins</span>
+      </button>
+      <button class="btn-admin-action" id="btnViewAllTests">
+         <span class="action-icon">📊</span>
+         <span>View All Tests</span>
+      </button>
+   </div>
+</div>
+
+<!-- MANAGE USERS PAGE -->
+<div class="page-content" id="manageUsersPage">
+   <button class="btn-back" onclick="navigateTo('admin-dashboard')">
+      ← Kembali ke Dashboard
+   </button>
+   
+   <div class="content-box">
+      <h2>👥 Manage Users</h2>
+      <p class="page-subtitle">Total: <strong id="userCount">0</strong> users</p>
+      
+      <div id="usersList" class="data-table"></div>
+   </div>
+</div>
+
+<!-- MANAGE ADMINS PAGE -->
+<div class="page-content" id="manageAdminsPage">
+   <button class="btn-back" onclick="navigateTo('admin-dashboard')">
+      ← Kembali ke Dashboard
+   </button>
+   
+   <div class="content-box">
+      <h2>👨‍💼 Manage Admins</h2>
+      <p class="page-subtitle">Total: <strong id="adminCount">0</strong> admins</p>
+      
+      <div id="adminsList" class="data-table"></div>
+   </div>
+</div>
+
+<!-- VIEW ALL TESTS PAGE -->
+<div class="page-content" id="viewAllTestsPage">
+   <button class="btn-back" onclick="navigateTo('admin-dashboard')">
+      ← Kembali ke Dashboard
+   </button>
+   
+   <div class="content-box">
+      <h2>📊 All Test Results</h2>
+      <p class="page-subtitle">Total: <strong id="testCount">0</strong> test results</p>
+      
+      <div id="allTestsList" class="data-table"></div>
+   </div>
+</div>
+
+<script type="module" src="script.js"></script>
+<script type="module" src="admin-script.js"></script>
 </body>
 </html>
