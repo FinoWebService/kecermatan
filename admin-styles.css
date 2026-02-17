@@ -199,22 +199,23 @@
 /* Admin Dashboard */
 .admin-header {
     background: white;
-    padding: 30px;
+    padding: 25px 30px;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .admin-header h2 {
-    font-size: 28px;
+    font-size: 26px;
     color: #1a6b6b;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .admin-header p {
     color: #666;
-    font-size: 15px;
+    font-size: 14px;
 }
+
 
 /* Admin Stats Grid */
 .admin-stats-grid {
