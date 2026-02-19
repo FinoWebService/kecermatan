@@ -158,9 +158,20 @@ btnSidebarLogin.addEventListener('click', () => {
 
 
 // ===============================
-// NAVIGATION
+// NAVIGATION (WITH ADMIN SECURITY)
 // ===============================
 function navigateTo(pageName){
+    // ✅ FIX: Block access to admin pages if not admin
+    const adminPages = ['adminDashboard', 'manageUsers', 'manageAdmins', 'viewAllTests'];
+    if(adminPages.includes(pageName)){
+        if(!currentUser || currentUser.role !== 'admin'){
+            console.warn('⛔ Access denied: Admin only page');
+            alert('Akses ditolak! Halaman ini hanya untuk admin.');
+            navigateTo('home');
+            return;
+        }
+    }
+    
     // Hide all pages (include admin pages)
     const allPages = document.querySelectorAll('.page-content');
     allPages.forEach(page => page.classList.remove('active'));
@@ -365,7 +376,7 @@ window.showLogoutConfirm = showLogoutConfirm;
 
 
 // ===============================
-// UPDATE UI
+// UPDATE UI (WITH ADMIN PAGE SECURITY)
 // ===============================
 function updateUILoggedIn(){
     document.getElementById('homeUserName').innerText = currentUser.username;
@@ -385,8 +396,9 @@ function updateUILoggedIn(){
         showLogoutConfirm();
     });
     
-    // Show admin menu items if admin
+    // ✅ FIX: Show/Hide admin menu & pages based on role
     if(currentUser.role === 'admin'){
+        // Show admin menu in sidebar
         document.querySelectorAll('.admin-only').forEach(el => {
             if(el.classList.contains('sidebar-divider')){
                 el.style.display = 'block';
@@ -394,13 +406,37 @@ function updateUILoggedIn(){
                 el.style.display = 'flex';
             }
         });
+        
+        // ✅ Make admin pages accessible
+        document.getElementById('adminDashboardPage').style.pointerEvents = 'auto';
+        document.getElementById('manageUsersPage').style.pointerEvents = 'auto';
+        document.getElementById('manageAdminsPage').style.pointerEvents = 'auto';
+        document.getElementById('viewAllTestsPage').style.pointerEvents = 'auto';
     } else {
+        // Hide admin menu from regular users
         document.querySelectorAll('.admin-only').forEach(el => {
             el.style.display = 'none';
         });
+        
+        // ✅ FIX: Block access to admin pages for regular users
+        document.getElementById('adminDashboardPage').style.pointerEvents = 'none';
+        document.getElementById('manageUsersPage').style.pointerEvents = 'none';
+        document.getElementById('manageAdminsPage').style.pointerEvents = 'none';
+        document.getElementById('viewAllTestsPage').style.pointerEvents = 'none';
+        
+        // ✅ FIX: If somehow user is on admin page, redirect to home
+        const currentPage = document.querySelector('.page-content.active');
+        if(currentPage && (
+            currentPage.id === 'adminDashboardPage' ||
+            currentPage.id === 'manageUsersPage' ||
+            currentPage.id === 'manageAdminsPage' ||
+            currentPage.id === 'viewAllTestsPage'
+        )){
+            navigateTo('home');
+        }
     }
     
-    // ✅ FIX: Only load data if regular user (not admin)
+    // ✅ FIX: Only load user data if regular user (not admin)
     if(currentUser.id && !currentUser.role){
         loadProgressData();
         loadLeaderboard();
@@ -420,10 +456,27 @@ function updateUIGuest(){
         </button>
     `;
     
-    // Hide admin menu items
+    // ✅ FIX: Hide admin menu items for guests
     document.querySelectorAll('.admin-only').forEach(el => {
         el.style.display = 'none';
     });
+    
+    // ✅ FIX: Block access to admin pages for guests
+    document.getElementById('adminDashboardPage').style.pointerEvents = 'none';
+    document.getElementById('manageUsersPage').style.pointerEvents = 'none';
+    document.getElementById('manageAdminsPage').style.pointerEvents = 'none';
+    document.getElementById('viewAllTestsPage').style.pointerEvents = 'none';
+    
+    // ✅ FIX: If guest somehow on admin page, redirect to home
+    const currentPage = document.querySelector('.page-content.active');
+    if(currentPage && (
+        currentPage.id === 'adminDashboardPage' ||
+        currentPage.id === 'manageUsersPage' ||
+        currentPage.id === 'manageAdminsPage' ||
+        currentPage.id === 'viewAllTestsPage'
+    )){
+        navigateTo('home');
+    }
     
     // Re-attach event listener
     const newBtn = document.getElementById('btnSidebarLogin');
