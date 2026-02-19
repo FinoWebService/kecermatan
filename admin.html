@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>CERMATRIX — Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin-panel.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- LOGIN SCREEN -->
+<!-- ============================================================ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo">CERMATRIX</div>
+      <div class="tagline">CAT PRECISION SYSTEM</div>
+      <div class="login-badge">⚡ ADMIN PANEL</div>
+    </div>
+    <div class="form-group">
+      <div class="login-label">Username Admin</div>
+      <input type="text" id="loginUser" class="login-input" placeholder="Masukkan username admin">
+    </div>
+    <div class="form-group">
+      <div class="login-label">Password</div>
+      <input type="password" id="loginPass" class="login-input" placeholder="••••••••">
+    </div>
+    <button class="login-btn" id="btnLogin">MASUK KE PANEL</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-back">
+      Bukan admin? <a href="index.html">← Kembali ke CERMATRIX</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ADMIN APP (hidden until login) -->
+<!-- ============================================================ -->
+<div id="adminApp">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">CERMATRIX</div>
+      <div class="sb-sub">Admin Panel</div>
+    </div>
+    <div class="sb-nav">
+      <div class="nav-section">Monitoring</div>
+      <button class="nav-item active" data-section="dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" data-section="users">
+        <span class="nav-icon">👥</span> Manage Users
+      </button>
+      <button class="nav-item" data-section="tests">
+        <span class="nav-icon">📝</span> Test Results
+      </button>
+      <button class="nav-item" data-section="analytics">
+        <span class="nav-icon">📈</span> Analytics
+      </button>
+      <div class="nav-section">Admin</div>
+      <button class="nav-item" data-section="admins">
+        <span class="nav-icon">🔐</span> Manage Admins
+      </button>
+    </div>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">A</div>
+        <div>
+          <div class="sb-uname" id="sbUsername">Admin</div>
+          <div class="sb-urole">ADMINISTRATOR</div>
+        </div>
+      </div>
+      <button class="btn-logout" id="btnLogout">⏏ Logout</button>
+    </div>
+  </nav>
+
+  <!-- MAIN AREA -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left-wrap">
+        <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+        <div class="topbar-left">
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-breadcrumb">
+            CERMATRIX / Admin Panel / <span id="pageCrumb">Dashboard</span>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-time" id="liveTime">--:--:--</div>
+        <button class="btn-refresh" id="btnRefresh">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ===== SECTION: DASHBOARD ===== -->
+      <div class="section active" id="sec-dashboard">
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card c-teal">
+            <span class="kpi-icon">👥</span>
+            <div class="kpi-val" id="kpi-users">—</div>
+            <div class="kpi-label">Total Users</div>
+            <div class="kpi-sub" id="kpi-users-sub"></div>
+          </div>
+          <div class="kpi-card c-gold">
+            <span class="kpi-icon">📝</span>
+            <div class="kpi-val" id="kpi-tests">—</div>
+            <div class="kpi-label">Total Tes</div>
+            <div class="kpi-sub" id="kpi-tests-sub"></div>
+          </div>
+          <div class="kpi-card c-blue">
+            <span class="kpi-icon">⭐</span>
+            <div class="kpi-val" id="kpi-avg">—</div>
+            <div class="kpi-label">Rata-rata Score</div>
+            <div class="kpi-sub" id="kpi-avg-sub"></div>
+          </div>
+          <div class="kpi-card c-green">
+            <span class="kpi-icon">🏆</span>
+            <div class="kpi-val" id="kpi-top">—</div>
+            <div class="kpi-label">Score Tertinggi</div>
+            <div class="kpi-sub" id="kpi-top-sub"></div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="card-title">
+              <div class="dot"></div> Aktivitas Tes (30 Hari Terakhir)
+            </div>
+            <canvas id="activityChart" height="120"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">
+              <div class="dot"></div> Distribusi Score
+            </div>
+            <canvas id="distChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent + Top -->
+        <div class="recent-row">
+          <div class="data-card">
+            <div class="card-title"><div class="dot"></div> Tes Terbaru</div>
+            <div class="activity-list" id="recentTests">
+              <div class="loading-row"><div class="spinner"></div> Memuat...</div>
+            </div>
+          </div>
+          <div class="data-card">
+            <div class="card-title"><div class="dot"></div> Top Performers</div>
+            <div class="rank-list" id="topPerformers">
+              <div class="loading-row"><div class="spinner"></div> Memuat...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: USERS ===== -->
+      <div class="section" id="sec-users">
+        <div class="table-header">
+          <div class="search-box">
+            🔍
+            <input type="text" id="userSearch" placeholder="Cari username...">
+          </div>
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Semua</button>
+            <button class="filter-tab" data-filter="active">Aktif</button>
+            <button class="filter-tab" data-filter="new">Baru</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Total Tes</th>
+                <th>Best Score</th>
+                <th>Avg Score</th>
+                <th>Bergabung</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="6">
+                  <div class="loading-row"><div class="spinner"></div> Memuat data...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: TEST RESULTS ===== -->
+      <div class="section" id="sec-tests">
+        <div class="table-header">
+          <div class="search-box">
+            🔍
+            <input type="text" id="testSearch" placeholder="Cari user...">
+          </div>
+          <div class="tests-count-info">
+            Total: <span id="totalTestsCount">0</span> hasil tes
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Score</th>
+                <th>Visualisasi</th>
+                <th>Waktu</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="testsTableBody">
+              <tr>
+                <td colspan="6">
+                  <div class="loading-row"><div class="spinner"></div> Memuat data...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: ANALYTICS ===== -->
+      <div class="section" id="sec-analytics">
+        <div class="analytics-grid">
+          <div class="chart-card chart-card-tall">
+            <div class="card-title"><div class="dot"></div> Tren Score Per Hari</div>
+            <canvas id="trendChart" height="220"></canvas>
+          </div>
+          <div class="chart-card chart-card-tall">
+            <div class="card-title"><div class="dot"></div> Score Terbaik Per User (Top 10)</div>
+            <canvas id="userBarChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <div class="card-title"><div class="dot"></div> Distribusi Score Semua Tes</div>
+            <div class="score-dist" id="scoreDist"></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title"><div class="dot"></div> Statistik Keseluruhan</div>
+            <div class="score-dist" id="statsDetail"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION: MANAGE ADMINS ===== -->
+      <div class="section" id="sec-admins">
+        <div class="admins-grid" id="adminsGrid">
+          <div class="loading-row"><div class="spinner"></div> Memuat...</div>
+        </div>
+
+        <!-- Invite Form (shown only if current admin has inviteAdmin permission) -->
+        <div class="invite-section" id="inviteSection" style="display:none;">
+          <h3>➕ Invite Admin Baru</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <div class="form-label">Username Admin Baru</div>
+              <input type="text" id="newAdminUser" class="form-input" placeholder="min 4 karakter">
+            </div>
+          </div>
+          <div class="form-label">Permissions</div>
+          <div class="perm-grid">
+            <label class="perm-toggle">
+              <input type="checkbox" id="p-users" checked>
+              <div class="perm-box"></div>
+              <span class="perm-text">Manage Users</span>
+            </label>
+            <label class="perm-toggle">
+              <input type="checkbox" id="p-tests" checked>
+              <div class="perm-box"></div>
+              <span class="perm-text">Delete Tests</span>
+            </label>
+            <label class="perm-toggle">
+              <input type="checkbox" id="p-invite">
+              <div class="perm-box"></div>
+              <span class="perm-text">Invite Admin</span>
+            </label>
+            <label class="perm-toggle">
+              <input type="checkbox" id="p-analytics" checked>
+              <div class="perm-box"></div>
+              <span class="perm-text">View Analytics</span>
+            </label>
+          </div>
+          <button class="btn-generate" id="btnGenerate">⚡ Generate Invitation Code</button>
+
+          <div class="invite-result" id="inviteResult">
+            <div class="result-row">
+              <span class="result-label">USERNAME</span>
+              <span class="result-val" id="res-username">—</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">INVITATION CODE</span>
+              <span class="result-code" id="res-code">—</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">BERLAKU SAMPAI</span>
+              <span class="result-val" id="res-expiry">—</span>
+            </div>
+            <div class="result-actions">
+              <button class="btn-copy-code" id="btnCopyInvite">📋 Copy</button>
+              <button class="btn-wa" id="btnWA">💬 WhatsApp</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /adminApp -->
+
+<!-- ============================================================ -->
+<!-- MODALS -->
+<!-- ============================================================ -->
+
+<!-- Modal: User Detail -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeUserModal">✕</button>
+    <div class="modal-title" id="modalUserTitle">Detail User</div>
+    <div class="modal-desc" id="modalUserDesc">Informasi lengkap user</div>
+    <div class="user-detail-grid" id="userDetailGrid"></div>
+    <div id="userHistoryWrap"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btnCancelModal">Tutup</button>
+      <button class="btn-modal-delete" id="btnDeleteUserModal">🗑️ Hapus User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Konfirmasi -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-title" id="confirmTitle">Konfirmasi</div>
+    <div class="modal-desc" id="confirmDesc">Apakah Anda yakin?</div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btnConfirmNo">Batal</button>
+      <button class="btn-modal-delete" id="btnConfirmYes">Ya, Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Sidebar Overlay (mobile tap-to-close) -->
+<div id="sideOverlay" onclick="window.closeSidebar()"></div>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================================ -->
+<script type="module" src="admin-panel.js"></script>
+
+</body>
+</html>

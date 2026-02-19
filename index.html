@@ -3,12 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>CERMATRIX - CAT Kecermatan</title>
-
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="admin-styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 </head>
 
 <body>
@@ -54,35 +51,23 @@
 </svg></span>
          <span class="menu-label">RIWAYAT TES</span>
       </a>
-      
-      <!-- ✅ ADMIN ONLY MENU ITEMS (SINGLE SET - NO DUPLICATES) -->
-      <div class="sidebar-divider admin-only" style="display:none;">
-         <span>ADMIN PANEL</span>
+
+      <!-- DIVIDER -->
+      <div class="sidebar-divider">
+         <span>LAINNYA</span>
       </div>
-      <a href="#" class="menu-item admin-only" data-page="adminDashboard" style="display:none;">
-         <span class="menu-icon">👨‍💼</span>
-         <span class="menu-label">DASHBOARD</span>
-      </a>
-      <a href="#" class="menu-item admin-only" data-page="manageUsers" style="display:none;">
-         <span class="menu-icon">👥</span>
-         <span class="menu-label">MANAGE USERS</span>
-      </a>
-      <a href="#" class="menu-item admin-only" data-page="manageAdmins" style="display:none;">
+
+      <!-- ADMIN PANEL LINK (always visible) -->
+      <a href="admin.html" class="menu-item menu-item-admin">
          <span class="menu-icon">🔐</span>
-         <span class="menu-label">MANAGE ADMINS</span>
-      </a>
-      <a href="#" class="menu-item admin-only" data-page="viewAllTests" style="display:none;">
-         <span class="menu-icon">📊</span>
-         <span class="menu-label">ALL TEST RESULTS</span>
+         <span class="menu-label">ADMIN PANEL</span>
       </a>
    </nav>
    
    <div class="sidebar-footer">
       <div class="sidebar-user-info" id="sidebarUserInfo">
          <div class="sidebar-user-name">Guest</div>
-         <button class="btn-sidebar-login" id="btnSidebarLogin">
-            Login
-         </button>
+         <button class="btn-sidebar-login" id="btnSidebarLogin">Login</button>
       </div>
    </div>
 </div>
@@ -96,90 +81,56 @@
    <!-- TOPBAR -->
    <div class="topbar">
       <button class="hamburger" id="hamburger">
-         <span></span>
-         <span></span>
-         <span></span>
+         <span></span><span></span><span></span>
       </button>
-      
       <div class="topbar-right">
          <span id="topbarUserName">Guest</span>
-         <div class="user-circle" id="userCircle">
-            <span>👤</span>
-         </div>
+         <div class="user-circle" id="userCircle"><span>👤</span></div>
       </div>
    </div>
-   
    
    <!-- HOME PAGE -->
    <div class="page-content active" id="homePage">
       <div class="home-container">
-         
          <div class="welcome-text">
             <p>Hello <span id="homeUserName">Guest</span>, welcome to</p>
             <h1>CERMATRIX</h1>
             <p class="subtitle">CAT Precision System by FinoEdo</p>
          </div>
-         
          <button class="btn-start-test" id="btnStartTest">
             - MULAI TES KECERMATAN -
          </button>
-         
          <div class="quick-menu">
             <button class="quick-btn" data-page="progress">
-               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
-  <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
-</svg></div>
+               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16"><path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/></svg></div>
                <div class="quick-label">PROGRESS</div>
             </button>
             <button class="quick-btn" data-page="leaderboard">
-               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
-  <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
-</svg></div>
+               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16"><path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/></svg></div>
                <div class="quick-label">LEADERBOARD</div>
             </button>
             <button class="quick-btn" data-page="history">
-               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
-  <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
-  <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
-  <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
-</svg></div>
+               <div class="quick-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="35" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16"><path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/><path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/><path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/></svg></div>
                <div class="quick-label">RIWAYAT TES</div>
             </button>
          </div>
-         
       </div>
    </div>
    
-   
    <!-- TEST PAGE -->
    <div class="page-content" id="testPage">
-      <button class="btn-back" onclick="navigateTo('home')">
-         ← Kembali ke Home
-      </button>
-      
+      <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
          <h2>🎯 Tes Kecermatan</h2>
          <p class="test-desc">Uji fokus dan kecepatan berpikir kamu dengan tes kecermatan ini!</p>
-         
          <div class="test-info">
             <h3>📋 Informasi Tes</h3>
-            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg> Total: <strong>10 Kolom</strong></p>
-            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg> Soal per kolom: <strong>50 Soal</strong></p>
-            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg> Waktu per kolom: <strong>60 Detik</strong></p>
-            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg> Persiapan kolom pertama: <strong>10 Detik</strong></p>
-            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg> Persiapan kolom berikutnya: <strong>5 Detik</strong></p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Total: <strong>10 Kolom</strong></p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Soal per kolom: <strong>50 Soal</strong></p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Waktu per kolom: <strong>60 Detik</strong></p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Persiapan kolom pertama: <strong>10 Detik</strong></p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Persiapan kolom berikutnya: <strong>5 Detik</strong></p>
          </div>
-         
          <div class="test-rules">
             <h3>📖 Cara Bermain</h3>
             <p>1. Kamu akan melihat <strong>5 simbol</strong> yang dipasangkan dengan <strong>5 huruf</strong> (A-E)</p>
@@ -188,49 +139,26 @@
             <p>4. Jawab <strong>sebanyak mungkin</strong> dalam waktu 60 detik per kolom</p>
             <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! 🏆</p>
          </div>
-         
-         <button class="btn-primary" id="btnStartFromPage">
-            - Mulai Tes Sekarang -
-         </button>
-         
+         <button class="btn-primary" id="btnStartFromPage">- Mulai Tes Sekarang -</button>
          <p class="test-note">⚠️ <em>Pastikan kamu sudah siap dan fokus sebelum memulai tes!</em></p>
       </div>
    </div>
    
-   
    <!-- PROGRESS PAGE -->
    <div class="page-content" id="progressPage">
-      <button class="btn-back" onclick="navigateTo('home')">
-         ← Kembali ke Home
-      </button>
-      
+      <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
          <h2>📊 Progress Kamu</h2>
-         
          <div class="stats-row">
-            <div class="stat-box">
-               <div class="stat-value" id="statTotal">0</div>
-               <div class="stat-label">Total Tes</div>
-            </div>
-            <div class="stat-box">
-               <div class="stat-value" id="statAvg">0</div>
-               <div class="stat-label">Rata-rata</div>
-            </div>
-            <div class="stat-box">
-               <div class="stat-value" id="statBest">0</div>
-               <div class="stat-label">Tertinggi</div>
-            </div>
-            <div class="stat-box">
-               <div class="stat-value" id="statLast">-</div>
-               <div class="stat-label">Terakhir</div>
-            </div>
+            <div class="stat-box"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total Tes</div></div>
+            <div class="stat-box"><div class="stat-value" id="statAvg">0</div><div class="stat-label">Rata-rata</div></div>
+            <div class="stat-box"><div class="stat-value" id="statBest">0</div><div class="stat-label">Tertinggi</div></div>
+            <div class="stat-box"><div class="stat-value" id="statLast">-</div><div class="stat-label">Terakhir</div></div>
          </div>
-         
          <div class="chart-box">
             <h3>Grafik Performa</h3>
             <canvas id="scoreChart"></canvas>
          </div>
-         
          <div class="badges-box">
             <h3>🏆 Badge & Pencapaian</h3>
             <div id="badgesGrid" class="badges-grid"></div>
@@ -238,36 +166,28 @@
       </div>
    </div>
    
-   
    <!-- LEADERBOARD PAGE -->
    <div class="page-content" id="leaderboardPage">
-      <button class="btn-back" onclick="navigateTo('home')">
-         ← Kembali ke Home
-      </button>
-      
+      <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
          <h2>🏆 Leaderboard</h2>
          <div id="leaderboardList"></div>
       </div>
    </div>
    
-   
    <!-- HISTORY PAGE -->
    <div class="page-content" id="historyPage">
-      <button class="btn-back" onclick="navigateTo('home')">
-         ← Kembali ke Home
-      </button>
-      
+      <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
          <h2>📜 Riwayat Tes</h2>
          <div id="historyList"></div>
       </div>
    </div>
-   
-</div>
+
+</div><!-- /app-container -->
 
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL (User Only) -->
 <div class="modal-overlay" id="loginModal">
    <div class="modal-box">
       <button class="modal-close" id="closeLogin">&times;</button>
@@ -279,7 +199,6 @@
       <p class="modal-link">Belum punya akun? <a href="#" id="linkRegister">Daftar di sini</a></p>
    </div>
 </div>
-
 
 <!-- REGISTER MODAL -->
 <div class="modal-overlay" id="registerModal">
@@ -310,18 +229,13 @@
          </div>
       </div>
    </div>
-   
    <div class="exam-main">
       <div class="exam-content-box">
          <div id="stageInfo" class="stage-title">Kolom 1</div>
-         
          <div id="mapping" class="mapping-row"></div>
-         
          <div class="question-label">Pertanyaan</div>
          <div id="question" class="question-row"></div>
-         
          <div id="buttons" class="buttons-row"></div>
-         
          <div class="progress-text">Soal: <span id="questionCount">0</span>/50</div>
          <div id="resultBox" class="result-box"></div>
       </div>
@@ -329,230 +243,6 @@
 </div>
 
 
-<!-- LOGIN SELECTION MODAL -->
-<div class="modal-overlay" id="loginSelectionModal">
-   <div class="modal-box">
-      <button class="modal-close" id="closeLoginSelection">&times;</button>
-      <h2>Pilih Jenis Login</h2>
-      <p>Silakan pilih sebagai apa Anda ingin login</p>
-      
-      <div class="login-options">
-         <button class="btn-login-option" id="btnSelectUserLogin">
-            <div class="option-icon">👤</div>
-            <div class="option-title">Login sebagai User</div>
-            <div class="option-desc">Untuk mengerjakan tes kecermatan</div>
-         </button>
-         
-         <button class="btn-login-option" id="btnSelectAdminLogin">
-            <div class="option-icon">👨‍💼</div>
-            <div class="option-title">Login sebagai Admin</div>
-            <div class="option-desc">Untuk mengelola sistem</div>
-         </button>
-      </div>
-   </div>
-</div>
-
-<!-- ADMIN LOGIN MODAL -->
-<div class="modal-overlay" id="adminLoginModal">
-   <div class="modal-box">
-      <button class="modal-close" id="closeAdminLogin">&times;</button>
-      <h2>Login Admin</h2>
-      <p>Login khusus untuk administrator</p>
-      
-      <input type="text" id="adminLoginUsername" placeholder="Admin Username" class="input-box">
-      <input type="password" id="adminLoginPassword" placeholder="Admin Password" class="input-box">
-      <button class="btn-modal" id="btnAdminLogin">LOGIN</button>
-      
-      <p class="modal-link">
-         Punya invitation code? 
-         <a href="#" id="linkAdminInvitation">Aktivasi di sini</a>
-      </p>
-   </div>
-</div>
-
-<!-- ADMIN INVITATION MODAL -->
-<div class="modal-overlay" id="adminInvitationModal">
-   <div class="modal-box">
-      <button class="modal-close" id="closeAdminInvitation">&times;</button>
-      <h2>🎉 Aktivasi Admin</h2>
-      <p>Masukkan invitation code yang Anda terima</p>
-      
-      <input type="text" id="inviteCode" placeholder="Invitation Code (8 karakter)" class="input-box" maxlength="8" style="text-transform:uppercase;">
-      <button class="btn-modal" id="btnValidateCode">Validasi Code</button>
-      
-      <div id="inviteDetails" style="display:none;">
-         <div class="invitation-info">
-            <p><strong>Username:</strong> <span id="inviteUsername">-</span></p>
-            <p><strong>Permissions:</strong> <span id="invitePermissions">-</span></p>
-         </div>
-         
-         <input type="password" id="adminRegPassword" placeholder="Buat Password (min 8 karakter)" class="input-box">
-         <input type="password" id="adminRegPasswordConfirm" placeholder="Konfirmasi Password" class="input-box">
-         <button class="btn-modal" id="btnAcceptInvitation">Aktivasi Akun Admin</button>
-      </div>
-   </div>
-</div>
-
-<!-- INVITE ADMIN MODAL -->
-<div class="modal-overlay" id="inviteAdminModal">
-   <div class="modal-box modal-box-large">
-      <button class="modal-close" id="closeInviteAdmin">&times;</button>
-      <h2>➕ Invite New Admin</h2>
-      <p>Buat invitation untuk admin baru</p>
-      
-      <input type="text" id="newAdminUsername" placeholder="Username Admin Baru (min 4 karakter)" class="input-box">
-      
-      <div class="permissions-box">
-         <h3>Set Permissions:</h3>
-         <label class="permission-item">
-            <input type="checkbox" id="permManageUsers" checked>
-            <span>Manage Users - Hapus user, view data user</span>
-         </label>
-         <label class="permission-item">
-            <input type="checkbox" id="permDeleteTests" checked>
-            <span>Delete Tests - Hapus hasil tes</span>
-         </label>
-         <label class="permission-item">
-            <input type="checkbox" id="permInviteAdmin">
-            <span>Invite Admin - Invite admin lain (powerful!)</span>
-         </label>
-         <label class="permission-item">
-            <input type="checkbox" id="permViewAnalytics" checked>
-            <span>View Analytics - Lihat statistik & dashboard</span>
-         </label>
-      </div>
-      
-      <button class="btn-modal" id="btnGenerateInvite">Generate Invitation</button>
-      
-      <div id="inviteResult" style="display:none;">
-         <div class="invite-success">
-            <h3>✅ Invitation Berhasil Dibuat!</h3>
-            <div class="invite-code-box">
-               <div class="invite-row">
-                  <span class="invite-label">Username:</span>
-                  <span class="invite-value" id="resultUsername">-</span>
-               </div>
-               <div class="invite-row">
-                  <span class="invite-label">Invitation Code:</span>
-                  <span class="invite-code" id="resultCode">-</span>
-               </div>
-               <div class="invite-row">
-                  <span class="invite-label">Berlaku sampai:</span>
-                  <span class="invite-value" id="resultExpiry">-</span>
-               </div>
-            </div>
-            <div class="invite-actions">
-               <button class="btn-copy" id="btnCopyCode">📋 Copy Code</button>
-               <button class="btn-share" id="btnShareWhatsApp">💬 Share WhatsApp</button>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-
-<!-- ADMIN DASHBOARD PAGE -->
-<div class="page-content" id="adminDashboardPage">
-   <div class="admin-header">
-      <h2>👨‍💼 Admin Dashboard</h2>
-      <p>Selamat datang, <strong id="adminDisplayName">Admin</strong></p>
-   </div>
-   
-   <!-- Stats Cards -->
-   <div class="admin-stats-grid">
-      <div class="admin-stat-card">
-         <div class="stat-icon">👥</div>
-         <div class="stat-content">
-            <div class="stat-value" id="statTotalUsers">0</div>
-            <div class="stat-label">Total Users</div>
-         </div>
-      </div>
-      <div class="admin-stat-card">
-         <div class="stat-icon">📝</div>
-         <div class="stat-content">
-            <div class="stat-value" id="statTotalTests">0</div>
-            <div class="stat-label">Total Tests</div>
-         </div>
-      </div>
-      <div class="admin-stat-card">
-         <div class="stat-icon">👨‍💼</div>
-         <div class="stat-content">
-            <div class="stat-value" id="statTotalAdmins">0</div>
-            <div class="stat-label">Total Admins</div>
-         </div>
-      </div>
-      <div class="admin-stat-card">
-         <div class="stat-icon">📊</div>
-         <div class="stat-content">
-            <div class="stat-value" id="statAvgScore">0</div>
-            <div class="stat-label">Avg Score</div>
-         </div>
-      </div>
-   </div>
-   
-   <!-- Quick Actions -->
-   <div class="admin-actions">
-      <button class="btn-admin-action" id="btnInviteAdmin">
-         <span class="action-icon">➕</span>
-         <span>Invite New Admin</span>
-      </button>
-      <button class="btn-admin-action" id="btnManageUsers">
-         <span class="action-icon">👥</span>
-         <span>Manage Users</span>
-      </button>
-      <button class="btn-admin-action" id="btnManageAdmins">
-         <span class="action-icon">👨‍💼</span>
-         <span>Manage Admins</span>
-      </button>
-      <button class="btn-admin-action" id="btnViewAllTests">
-         <span class="action-icon">📊</span>
-         <span>View All Tests</span>
-      </button>
-   </div>
-</div>
-
-<!-- MANAGE USERS PAGE -->
-<div class="page-content" id="manageUsersPage">
-   <button class="btn-back" onclick="navigateTo('adminDashboard')">
-      ← Kembali ke Dashboard
-   </button>
-   
-   <div class="content-box">
-      <h2>👥 Manage Users</h2>
-      <p class="page-subtitle">Total: <strong id="userCount">0</strong> users</p>
-      
-      <div id="usersList" class="data-table"></div>
-   </div>
-</div>
-
-<!-- MANAGE ADMINS PAGE -->
-<div class="page-content" id="manageAdminsPage">
-   <button class="btn-back" onclick="navigateTo('adminDashboard')">
-      ← Kembali ke Dashboard
-   </button>
-   
-   <div class="content-box">
-      <h2>👨‍💼 Manage Admins</h2>
-      <p class="page-subtitle">Total: <strong id="adminCount">0</strong> admins</p>
-      
-      <div id="adminsList" class="data-table"></div>
-   </div>
-</div>
-
-<!-- VIEW ALL TESTS PAGE -->
-<div class="page-content" id="viewAllTestsPage">
-   <button class="btn-back" onclick="navigateTo('adminDashboard')">
-      ← Kembali ke Dashboard
-   </button>
-   
-   <div class="content-box">
-      <h2>📊 All Test Results</h2>
-      <p class="page-subtitle">Total: <strong id="testCount">0</strong> test results</p>
-      
-      <div id="allTestsList" class="data-table"></div>
-   </div>
-</div>
-
 <script type="module" src="script.js"></script>
-<script type="module" src="admin-script.js"></script>
 </body>
 </html>
