@@ -51,11 +51,24 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
+  cursor: default;
 }
-a { text-decoration: none; color: inherit; }
+/* No text cursor, no text selection — feels like a real web app */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: default;
+}
+/* Restore only for actual input fields */
+input, textarea, [contenteditable] {
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+}
+a { text-decoration: none; color: inherit; cursor: pointer; }
 button { cursor: pointer; font-family: var(--font); border: none; background: none; }
 input  { font-family: var(--font); }
-* { -webkit-tap-highlight-color: transparent; }
 
 /* ============================================================ */
 /* SIDEBAR                                                      */
