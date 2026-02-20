@@ -217,29 +217,55 @@
 
 <!-- EXAM SCREEN -->
 <div class="exam-screen" id="examScreen">
-   <div class="exam-top">
-      <div class="exam-tabs">
-         <div class="exam-tab active">KECERMATAN</div>
-      </div>
-      <div class="exam-timer-top">
-         <button class="btn-exit-top" id="btnExitExam">← Keluar</button>
-         <div class="timer-box">
-            <span class="timer-label">Sisa Waktu</span>
-            <span class="timer-value" id="examTimer">00:01:00</span>
+
+   <!-- TOP BAR: Tahap Ujian (kiri) | Keluar + Timer (kanan) -->
+   <div class="exam-topbar">
+
+      <!-- KIRI: Label Tahap Ujian -->
+      <div class="exam-topbar-left">
+         <div class="exam-stage-label">Tahap Ujian</div>
+         <div class="exam-tab-strip">
+            <div class="exam-tab-pill active">KECERMATAN</div>
          </div>
       </div>
+
+      <!-- KANAN: Tombol Keluar + Timer -->
+      <div class="exam-topbar-right">
+         <button class="btn-exit-exam" id="btnExitExam">← Keluar</button>
+         <div class="exam-timer-box">
+            <div class="exam-timer-label">Sisa Waktu</div>
+            <div class="exam-timer-value" id="examTimer">00:01:00</div>
+         </div>
+      </div>
+
    </div>
-   <div class="exam-main">
-      <div class="exam-content-box">
-         <div id="stageInfo" class="stage-title">Kolom 1</div>
+
+   <!-- MAIN CONTENT AREA -->
+   <div class="exam-body">
+      <div class="exam-card">
+
+         <!-- Kolom Info -->
+         <div id="stageInfo" class="exam-kolom-title">Kolom 1</div>
+
+         <!-- Mapping simbol → huruf -->
          <div id="mapping" class="mapping-row"></div>
-         <div class="question-label">Pertanyaan</div>
+
+         <!-- Soal -->
+         <div class="exam-pertanyaan-label">Pertanyaan</div>
          <div id="question" class="question-row"></div>
+
+         <!-- Tombol jawaban A B C D E -->
          <div id="buttons" class="buttons-row"></div>
-         <div class="progress-text">Soal: <span id="questionCount">0</span>/50</div>
+
+         <!-- Counter soal -->
+         <div class="exam-counter">Soal: <span id="questionCount">0</span>/50</div>
+
+         <!-- Result box (muncul saat selesai) -->
          <div id="resultBox" class="result-box"></div>
+
       </div>
    </div>
+
 </div>
 
 
