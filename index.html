@@ -59,7 +59,7 @@
 
       <!-- ADMIN PANEL LINK (always visible) -->
       <a href="admin.html" class="menu-item menu-item-admin">
-         <span class="menu-icon">🔐</span>
+         <span class="menu-icon"></span>
          <span class="menu-label">ADMIN PANEL</span>
       </a>
    </nav>
@@ -121,10 +121,10 @@
    <div class="page-content" id="testPage">
       <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
-         <h2>🎯 Tes Kecermatan</h2>
+         <h2> Tes Kecermatan</h2>
          <p class="test-desc">Uji fokus dan kecepatan berpikir kamu dengan tes kecermatan ini!</p>
          <div class="test-info">
-            <h3>📋 Informasi Tes</h3>
+            <h3> Informasi Tes</h3>
             <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Total: <strong>10 Kolom</strong></p>
             <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Soal per kolom: <strong>50 Soal</strong></p>
             <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Waktu per kolom: <strong>60 Detik</strong></p>
@@ -132,12 +132,12 @@
             <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg> Persiapan kolom berikutnya: <strong>5 Detik</strong></p>
          </div>
          <div class="test-rules">
-            <h3>📖 Cara Bermain</h3>
+            <h3> How To Play</h3>
             <p>1. Kamu akan melihat <strong>5 simbol</strong> yang dipasangkan dengan <strong>5 huruf</strong> (A-E)</p>
             <p>2. Kemudian, <strong>4 simbol</strong> akan ditampilkan (1 simbol hilang)</p>
             <p>3. Tugas kamu: <strong>Tebak huruf</strong> yang sesuai dengan simbol yang hilang</p>
             <p>4. Jawab <strong>sebanyak mungkin</strong> dalam waktu 60 detik per kolom</p>
-            <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! 🏆</p>
+            <p>5. Semakin banyak jawaban benar, semakin tinggi nilai kamu! </p>
          </div>
          <button class="btn-primary" id="btnStartFromPage">- Mulai Tes Sekarang -</button>
          <p class="test-note">⚠️ <em>Pastikan kamu sudah siap dan fokus sebelum memulai tes!</em></p>
@@ -148,7 +148,7 @@
    <div class="page-content" id="progressPage">
       <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
-         <h2>📊 Progress Kamu</h2>
+         <h2> Progress Kamu</h2>
          <div class="stats-row">
             <div class="stat-box"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total Tes</div></div>
             <div class="stat-box"><div class="stat-value" id="statAvg">0</div><div class="stat-label">Rata-rata</div></div>
@@ -160,7 +160,7 @@
             <canvas id="scoreChart"></canvas>
          </div>
          <div class="badges-box">
-            <h3>🏆 Badge & Pencapaian</h3>
+            <h3> Badge & Pencapaian</h3>
             <div id="badgesGrid" class="badges-grid"></div>
          </div>
       </div>
@@ -170,7 +170,7 @@
    <div class="page-content" id="leaderboardPage">
       <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
-         <h2>🏆 Leaderboard</h2>
+         <h2> Leaderboard</h2>
          <div id="leaderboardList"></div>
       </div>
    </div>
@@ -179,7 +179,7 @@
    <div class="page-content" id="historyPage">
       <button class="btn-back" onclick="navigateTo('home')">← Kembali ke Home</button>
       <div class="content-box">
-         <h2>📜 Riwayat Tes</h2>
+         <h2> Riwayat Tes</h2>
          <div id="historyList"></div>
       </div>
    </div>

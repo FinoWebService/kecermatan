@@ -270,8 +270,8 @@ function renderActivityChart(){
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#527070', maxTicksLimit: 8, font: { size: 11 } }, grid: { color: '#1f4040' } },
-        y: { ticks: { color: '#527070', font: { size: 11 } }, grid: { color: '#1f4040' }, beginAtZero: true }
+        x: { ticks: { color: '#7a9e9e', maxTicksLimit: 8, font: { size: 11 } }, grid: { color: '#d4e8e8' } },
+        y: { ticks: { color: '#7a9e9e', font: { size: 11 } }, grid: { color: '#d4e8e8' }, beginAtZero: true }
       }
     }
   });
@@ -306,7 +306,7 @@ function renderDistChart(){
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#a3d5d3', padding: 12, font: { size: 11 } }
+          labels: { color: '#3d5c5c', padding: 12, font: { size: 11 } }
         }
       }
     }
@@ -472,7 +472,7 @@ window.viewUser = function(uid){
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;">
         ${recentUserTests.map(t => `
-          <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border-radius:8px;padding:10px 14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:8px;padding:10px 14px;">
             <span style="font-size:13px;color:var(--muted);">${formatDate(t.waktu)}</span>
             <span style="font-family:var(--mono);font-weight:700;color:${scoreColor(t.nilai)}">${t.nilai}</span>
           </div>
@@ -607,7 +607,7 @@ function renderAdmins(){
           <div class="admin-meta">
             <div class="admin-uname">
               ${a.username}
-              ${isMe ? '<span style="font-size:11px;color:var(--teal);"> (Saya)</span>' : ''}
+              ${isMe ? '<span style="font-size:11px;color:var(--primary);"> (Saya)</span>' : ''}
             </div>
             <div class="admin-status">
               <span class="badge ${isActive ? 'badge-active' : 'badge-admin'}">
@@ -757,8 +757,8 @@ function renderTrendChart(){
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#527070', font: { size: 11 } }, grid: { color: '#1f4040' } },
-        y: { ticks: { color: '#527070', font: { size: 11 } }, grid: { color: '#1f4040' }, min: 0, max: 100 }
+        x: { ticks: { color: '#7a9e9e', font: { size: 11 } }, grid: { color: '#d4e8e8' } },
+        y: { ticks: { color: '#7a9e9e', font: { size: 11 } }, grid: { color: '#d4e8e8' }, min: 0, max: 100 }
       }
     }
   });
@@ -791,8 +791,8 @@ function renderUserBarChart(){
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#527070', font: { size: 11 } }, grid: { color: '#1f4040' }, min: 0, max: 100 },
-        y: { ticks: { color: '#a3d5d3', font: { size: 11 } }, grid: { display: false } }
+        x: { ticks: { color: '#7a9e9e', font: { size: 11 } }, grid: { color: '#d4e8e8' }, min: 0, max: 100 },
+        y: { ticks: { color: '#3d5c5c', font: { size: 11 } }, grid: { display: false } }
       }
     }
   });
@@ -846,7 +846,7 @@ function renderStatsDetail(){
   $('statsDetail').innerHTML = items.map(it => `
     <div class="dist-row" style="gap:14px;">
       <div class="dist-label" style="width:110px;">${it.label}</div>
-      <div style="flex:1;font-weight:700;color:var(--teal);font-family:var(--mono);">${it.value}</div>
+      <div style="flex:1;font-weight:700;color:var(--primary);font-family:var(--mono);">${it.value}</div>
     </div>
   `).join('');
 }
